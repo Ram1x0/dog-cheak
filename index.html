@@ -106,20 +106,25 @@ button:active {
   transition: 0.1s;
 }
 
-/* ボタン領域 */
-.btns {
-  display: flex;
+/* ボタン領域 */.btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 6px;
   padding: 8px;
 }
 
 .btns button {
-  flex: 1;
-  font-size: 11px;
+  font-size: 12px;
   padding: 10px 0;
   border-radius: 10px;
-  min-height: 40px;
+  min-height: 42px;
+  font-family: inherit;
   touch-action: manipulation;
+}
+
+/* 2ボタン専用に3つ目は非表示 */
+.givenBtn {
+  display: none;
 }
 
 /* ボタン説明 */
@@ -290,21 +295,25 @@ function sortIndex(a, b) {
 ===================== */
 function playSound(type) {
   const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
 
   osc.connect(gain);
   gain.connect(ctx.destination);
 
-  osc.frequency.value =
-    type === "like" ? 700 :
-    type === "dislike" ? 200 : 450;
+  const freq =
+    type === "like" ? 740 :
+    type === "dislike" ? 180 :
+    520;
 
-  gain.gain.setValueAtTime(0.2, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+  osc.frequency.value = freq;
+
+  gain.gain.setValueAtTime(0.15, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
 
   osc.start();
-  osc.stop(ctx.currentTime + 0.2);
+  osc.stop(ctx.currentTime + 0.15);
 }
 
 /* =====================
@@ -326,9 +335,21 @@ function setState(i, type, div) {
   render();
 }
 
-  function toggleGiven(i) {
+function toggleGiven(i) {
   state[i].given = !state[i].given;
   localStorage.setItem("dog_" + i, JSON.stringify(state[i]));
+  playSound("given"); // ←これ入れるとゲーム感UP
+  render();
+}
+
+/* 👇ここに新関数を入れる */
+function tapFood(i) {
+  state[i].given = !state[i].given;
+
+  localStorage.setItem("dog_" + i, JSON.stringify(state[i]));
+
+  playSound("given");
+
   render();
 }
 
@@ -358,18 +379,18 @@ function render() {
     else if (s.given) {div.classList.add("given");} // ←ここが暗くなる対象
 
     div.innerHTML = `
-  <div class="img-box" onclick="toggleGiven(${i})">
-    <img src="${food.img}" loading="lazy">
-    <div class="label">${food.name}</div>
-  </div>
+  <div class="img-box" onclick="tapFood(${i})">
+  <img src="${food.img}" loading="lazy">
+  <div class="label">${food.name}</div>
+</div>
 
   <div class="btns">
-    <button class="likeBtn">🟢好物</button>
-    <button class="dislikeBtn">🔴嫌い</button>
-    <button class="givenBtn">☑️済</button>
+    <button class="likeBtn">⭕️好き</button>
+    <button class="dislikeBtn">❌嫌い</button>
+    <button class="givenBtn">✅済</button>
   </div>
 
-  <div class="hint">画像タップ＝「あげたことがある」</div>
+  <div class="hint">画像タップ＝「既にあげたエサ」</div>
 `;
 
     div.querySelector(".likeBtn").onclick =
