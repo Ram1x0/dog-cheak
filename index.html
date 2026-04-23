@@ -292,7 +292,7 @@ const text = {
 };
 
 let pets = JSON.parse(localStorage.getItem("pets")) || [
-  { name: "ペット1", type: "dog" }
+  { id: Date.now(), name: "ペット1", type: "dog" }
 ];
 
 let currentPet = pets[0].id;
@@ -321,48 +321,50 @@ function addPet() {
 }
 
 function renderPets() {
-let tapTimer = null;
+  const area = document.getElementById("petList");
+  area.innerHTML = "";
 
-pets.forEach((p, i) => {
-  const btn = document.createElement("button");
+  let tapTimer = null;
 
-  btn.textContent = `${p.type === "dog" ? "🐶" : "🐱"} ${p.name}`;
+  pets.forEach((p, i) => {
+    const btn = document.createElement("button");
 
-  if (p.id === currentPet) {
-    btn.style.background = "#ffe082";
-  }
+    btn.textContent = `${p.type === "dog" ? "🐶" : "🐱"} ${p.name}`;
 
-  btn.onclick = () => {
-    if (tapTimer) {
-      // ダブルタップ
-      clearTimeout(tapTimer);
-      tapTimer = null;
-
-      const newName = prompt("名前変更", p.name);
-      if (newName) {
-        pets[i].name = newName;
-        savePets();
-        renderPets();
-      }
-
-    } else {
-      // シングルタップ（遅延）
-      tapTimer = setTimeout(() => {
-        currentPet = p.id;
-        loadPetState();
-        render();
-        tapTimer = null;
-      }, 250); // ←ここ重要
+    if (p.id === currentPet) {
+      btn.style.background = "#ffe082";
     }
-  };
 
-  area.appendChild(btn);
-});
+    btn.onclick = () => {
+      if (tapTimer) {
+        clearTimeout(tapTimer);
+        tapTimer = null;
+
+        const newName = prompt("名前変更", p.name);
+        if (newName) {
+          pets[i].name = newName;
+          savePets();
+          renderPets();
+        }
+
+      } else {
+        tapTimer = setTimeout(() => {
+          currentPet = p.id;
+          loadPetState();
+          render();
+          tapTimer = null;
+        }, 250);
+      }
+    };
+
+    area.appendChild(btn);
+  });
+}
 
 function savePets() {
   localStorage.setItem("pets", JSON.stringify(pets));
 }
-  
+
 /* =====================
    状態
 ===================== */
@@ -550,8 +552,8 @@ function resetData() {
    起動
 ===================== */
 loadPetState();
-render();
 renderPets();
+render();
 search.addEventListener("input", render);
 
 </script>
