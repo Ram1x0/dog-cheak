@@ -526,7 +526,7 @@ function updateProgress() {
 /* =====================
    ロード
 ===================== */
-function {
+function loadPetState() {
   for (let i = 0; i < foods.length; i++) {
     const saved = localStorage.getItem("dog_" + i);
     if (saved) state[i] = JSON.parse(saved);
