@@ -94,7 +94,7 @@ button:active {
 .item.like { border: 3px solid #7bd88f; }
 .item.dislike { border: 3px solid #ff6b6b; }
 .item.given { border: 3px solid #6bb6ff; }
-.item.neutral {
+.item.given {
   opacity: 0.45;
   filter: grayscale(60%);
 }
@@ -300,7 +300,7 @@ function render() {
 
     if (s.like) {div.classList.add("like");}
     else if (s.dislike) {div.classList.add("dislike");}
-    else if (s.given) {div.classList.add("neutral");} // ←ここが暗くなる対象
+    else if (s.given) {div.classList.add("given");} // ←ここが暗くなる対象
 
     div.innerHTML = `
       <div class="img-box">
