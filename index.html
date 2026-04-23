@@ -17,7 +17,6 @@ h1 {
   font-size: 18px;
 }
 
-/* 上部UI */
 .topbar {
   position: sticky;
   top: 0;
@@ -46,19 +45,17 @@ button {
   color: white;
 }
 
-/* 4列 */
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
 
-/* カード */
 .item {
   position: relative;
   border-radius: 12px;
   overflow: hidden;
-  transition: 0.2s;
+  transition: 0.15s;
 }
 
 .item.checked {
@@ -66,7 +63,6 @@ button {
   opacity: 0.4;
 }
 
-/* 画像 */
 .img-box {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -79,7 +75,6 @@ button {
   object-fit: cover;
 }
 
-/* 名前 */
 .label {
   position: absolute;
   bottom: 0;
@@ -94,7 +89,6 @@ button {
   text-overflow: ellipsis;
 }
 
-/* タップ領域 */
 .tap-area {
   display: block;
   cursor: pointer;
@@ -104,7 +98,6 @@ button {
   display: none;
 }
 
-/* チェック表示 */
 .tap-area::after {
   content: "✔";
   position: absolute;
@@ -149,7 +142,9 @@ button {
 
 <script>
 
-/* ▼ データ（ここだけ編集すればOK） */
+/* =========================
+   データ
+========================= */
 const foods = [
 { name: "動物汎用エサ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/refs/heads/main/images/001動物汎用のエサ.PNG" },
 { name: "ドッグフード", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/refs/heads/main/images/002ドッグフード.PNG" },
@@ -185,112 +180,116 @@ const foods = [
 { name: "大根クリームポタージュ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/refs/heads/main/images/032大根クリームポタージュ.PNG" }
 ];
 
+/* =========================
+   キャッシュ
+========================= */
 const list = document.getElementById("list");
+const progress = document.getElementById("progress");
+const search = document.getElementById("search");
+const filterBtn = document.getElementById("filterBtn");
 
-/* ▼ 描画 */
-foods.forEach((food, i) => {
-  const id = "dog_" + i;
-
-  const div = document.createElement("div");
-  div.className = "item";
-
-  div.innerHTML = `
-    <label class="tap-area">
-      <div class="img-box">
-        <img src="${food.img}">
-        <div class="label">${food.name}</div>
-      </div>
-      <input type="checkbox" id="${id}">
-    </label>
-  `;
-
-  list.appendChild(div);
-
-  const cb = div.querySelector("input");
-
-  cb.checked = localStorage.getItem(id) === "true";
-
-  if (cb.checked) div.classList.add("checked");
-
-  cb.addEventListener("change", () => {
-    localStorage.setItem(id, cb.checked);
-    div.classList.toggle("checked", cb.checked);
-
-    updateProgress();
-    applyFilter();
-    sortItems();
-  });
-});
-
-/* ▼ フィルター */
+/* 状態 */
 let showUncheckedOnly = false;
+const state = Array(foods.length).fill(false);
 
-function toggleFilter() {
-  showUncheckedOnly = !showUncheckedOnly;
-  document.getElementById("filterBtn").classList.toggle("active", showUncheckedOnly);
-  applyFilter();
-}
-
-function applyFilter() {
-  const keyword = document.getElementById("search").value.toLowerCase();
-  const items = document.querySelectorAll(".item");
-
-  items.forEach((div, i) => {
-    const checked = localStorage.getItem("dog_" + i) === "true";
-    const text = foods[i].name.toLowerCase();
-
-    let visible = true;
-
-    if (showUncheckedOnly && checked) visible = false;
-    if (!text.includes(keyword)) visible = false;
-
-    div.classList.toggle("hidden", !visible);
-  });
-}
-
-/* ▼ 並び替え */
-function sortItems() {
-  const items = Array.from(list.children);
-
-  items.sort((a, b) => {
-    const aChecked = a.querySelector("input").checked;
-    const bChecked = b.querySelector("input").checked;
-    return aChecked - bChecked;
-  });
-
-  items.forEach(item => list.appendChild(item));
-}
-
-/* ▼ 進捗 */
-function updateProgress() {
-  const total = foods.length;
-  let checked = 0;
-
-  foods.forEach((_, i) => {
-    if (localStorage.getItem("dog_" + i) === "true") checked++;
-  });
-
-  document.getElementById("progress").innerText =
-    "未チェック " + (total - checked) + " / " + total;
-}
-
-/* ▼ リセット */
-function resetData() {
-  if (confirm("全部リセットしますか？")) {
-    foods.forEach((_, i) => {
-      localStorage.removeItem("dog_" + i);
-    });
-    location.reload();
+/* =========================
+   初期化
+========================= */
+function loadState() {
+  for (let i = 0; i < foods.length; i++) {
+    state[i] = localStorage.getItem("dog_" + i) === "true";
   }
 }
 
-/* ▼ 検索 */
-document.getElementById("search").addEventListener("input", applyFilter);
+/* =========================
+   描画
+========================= */
+function render() {
+  list.innerHTML = "";
 
-/* 初期処理 */
-updateProgress();
-applyFilter();
-sortItems();
+  const keyword = search.value.toLowerCase();
+
+  foods.forEach((food, i) => {
+    const checked = state[i];
+    const match = food.name.toLowerCase().includes(keyword);
+
+    if (showUncheckedOnly && checked) return;
+    if (!match) return;
+
+    const div = document.createElement("div");
+    div.className = "item" + (checked ? " checked" : "");
+
+    div.innerHTML = `
+      <label class="tap-area">
+        <div class="img-box">
+          <img src="${food.img}" onerror="this.src='https://via.placeholder.com/300'">
+          <div class="label">${food.name}</div>
+        </div>
+        <input type="checkbox" ${checked ? "checked" : ""}>
+      </label>
+    `;
+
+    const cb = div.querySelector("input");
+
+    cb.addEventListener("change", () => {
+      state[i] = cb.checked;
+      localStorage.setItem("dog_" + i, cb.checked);
+
+      div.classList.toggle("checked", cb.checked);
+
+      updateProgress();
+    });
+
+    list.appendChild(div);
+  });
+
+  updateProgress();
+}
+
+/* =========================
+   進捗
+========================= */
+function updateProgress() {
+  let checked = 0;
+  for (let i = 0; i < state.length; i++) {
+    if (state[i]) checked++;
+  }
+  progress.textContent = `チェック済 ${checked} / ${state.length}`;
+}
+
+/* =========================
+   フィルター
+========================= */
+function toggleFilter() {
+  showUncheckedOnly = !showUncheckedOnly;
+  filterBtn.classList.toggle("active", showUncheckedOnly);
+  render();
+}
+
+/* =========================
+   検索
+========================= */
+search.addEventListener("input", render);
+
+/* =========================
+   リセット
+========================= */
+function resetData() {
+  if (!confirm("全部リセットしますか？")) return;
+
+  for (let i = 0; i < state.length; i++) {
+    localStorage.removeItem("dog_" + i);
+  }
+
+  state.fill(false);
+  render();
+}
+
+/* =========================
+   起動
+========================= */
+loadState();
+render();
 
 </script>
 
