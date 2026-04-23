@@ -327,9 +327,22 @@ function renderPets() {
     const btn = document.createElement("button");
 
     btn.textContent = `${p.type === "dog" ? "🐶" : "🐱"} ${p.name}`;
+    if (i === currentPet) {
+  btn.style.background = "#ffe082";
+}
+
+btn.ondblclick = () => {
+  const newName = prompt("名前変更", p.name);
+  if (newName) {
+    pets[i].name = newName;
+    savePets();
+    renderPets();
+  }
+};
 
     btn.onclick = () => {
       currentPet = i;
+      road();
       render();
     };
 
@@ -407,7 +420,7 @@ function setState(i, type, div) {
   if (type === "like") state[i].dislike = false;
   if (type === "dislike") state[i].like = false;
 
-  localStorage.setItem("dog_" + i, JSON.stringify(state[i]));
+  localStorage.setItem(`pet_${currentPet}_${i}`, JSON.stringify(state[i]));
 
   div.classList.add("pop");
   setTimeout(() => div.classList.remove("pop"), 200);
@@ -418,7 +431,7 @@ function setState(i, type, div) {
 
 function toggleGiven(i) {
   state[i].given = !state[i].given;
-  localStorage.setItem("dog_" + i, JSON.stringify(state[i]));
+  localStorage.setItem(`pet_${currentPet}_${i}`, JSON.stringify(state[i]));
   playSound("given"); // ←これ入れるとゲーム感UP
   render();
 }
@@ -427,7 +440,7 @@ function toggleGiven(i) {
 function tapFood(i) {
   state[i].given = !state[i].given;
 
-  localStorage.setItem("dog_" + i, JSON.stringify(state[i]));
+  localStorage.setItem(`pet_${currentPet}_${i}`, JSON.stringify(state[i]));
 
   playSound("given");
 
@@ -514,9 +527,14 @@ function load() {
    リセット
 ===================== */
 function resetData() {
-  if (!confirm("リセットしますか？")) return;
-  localStorage.clear();
-  location.reload();
+  if (!confirm("このペットのデータだけリセットしますか？")) return;
+
+  for (let i = 0; i < foods.length; i++) {
+    localStorage.removeItem(`pet_${currentPet}_${i}`);
+    state[i] = { like: false, dislike: false, given: false };
+  }
+
+  render();
 }
 
 /* =====================
