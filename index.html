@@ -71,13 +71,14 @@ button:active {
   margin-top: 10px;
 }
 
-/* カード */
+/* iPhone対策 */
 .item {
   background: white;
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  transition: 0.15s;
+  display: flex;
+  flex-direction: column;
 }
 
 .item.pop {
@@ -88,6 +89,45 @@ button:active {
   0% { transform: scale(1); }
   50% { transform: scale(1.08); }
   100% { transform: scale(1); }
+}
+
+/* 画像はタップ領域 */
+.img-box {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.img-box:active {
+  transform: scale(0.97);
+  transition: 0.1s;
+}
+
+/* ボタン領域 */
+.btns {
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+}
+
+.btns button {
+  flex: 1;
+  font-size: 11px;
+  padding: 10px 0;
+  border-radius: 10px;
+  min-height: 40px;
+  touch-action: manipulation;
+}
+
+/* ボタン説明 */
+.hint {
+  font-size: 9px;
+  text-align: center;
+  opacity: 0.7;
+  padding: 4px 0 8px;
 }
 
 /* 状態 */
@@ -150,6 +190,15 @@ button:active {
   text-align: center;
   margin-top: 10px;
   font-weight: bold;
+}
+
+  .img-box {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.btns button {
+  min-height: 36px;
 }
 </style>
 </head>
@@ -277,6 +326,12 @@ function setState(i, type, div) {
   render();
 }
 
+  function toggleGiven(i) {
+  state[i].given = !state[i].given;
+  localStorage.setItem("dog_" + i, JSON.stringify(state[i]));
+  render();
+}
+
 /* =====================
    描画
 ===================== */
@@ -303,16 +358,19 @@ function render() {
     else if (s.given) {div.classList.add("given");} // ←ここが暗くなる対象
 
     div.innerHTML = `
-      <div class="img-box">
-        <img src="${food.img}" loading="lazy">
-        <div class="label">${food.name}</div>
-      </div>
-      <div class="btns">
-        <button class="likeBtn">🟢</button>
-        <button class="dislikeBtn">🔴</button>
-        <button class="givenBtn">☑️</button>
-      </div>
-    `;
+  <div class="img-box" onclick="toggleGiven(${i})">
+    <img src="${food.img}" loading="lazy">
+    <div class="label">${food.name}</div>
+  </div>
+
+  <div class="btns">
+    <button class="likeBtn">🟢好物</button>
+    <button class="dislikeBtn">🔴嫌い</button>
+    <button class="givenBtn">☑️済</button>
+  </div>
+
+  <div class="hint">画像タップ＝「あげたことがある」</div>
+`;
 
     div.querySelector(".likeBtn").onclick =
       () => setState(i, "like", div);
