@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>犬の好物チェック表</title>
+<title>ペットの好物チェック表</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap" rel="stylesheet">
 
@@ -207,7 +207,7 @@ button:active {
 
 <body>
 
-<h1>🐶 犬の好物チェック表 ✅</h1>
+<h1>🐶🐱 ペットの好物チェック表 ✅</h1>
 
 <div style="text-align:center; margin-bottom:8px;">
   <button onclick="setLang('jp')">🇯🇵 日本語</button>
@@ -237,7 +237,9 @@ button:active {
 /* =====================
    データ
 ===================== */
-const foods = [
+
+// 🐶 犬
+const dogFoods = [
 { name: "動物汎用エサ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/001.PNG" },
 { name: "ドッグフード", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/002.PNG" },
 { name: "ヒラタケ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/003.PNG" },
@@ -272,18 +274,28 @@ const foods = [
 { name: "大根クリームポタージュ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/032.PNG" }
 ];
 
+// 🐱 猫
+const catFoods = [
+{ name: "魚", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/001.PNG" },
+{ name: "キャットフード", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/002.PNG" },
+{ name: "サーモン", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/003.PNG" },
+{ name: "マグロ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/004.PNG" },
+{ name: "カツオ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/005.PNG" },
+{ name: "チキン", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/006.PNG" }
+];
+
 let lang = "jp";
   
 const text = {
   jp: {
-    title: "🐶 犬の好物チェック表",
+    title: "🐶🐱 ペットの好物チェック表",
     search: "検索",
     like: "⭕️好き",
     dislike: "❌嫌い",
     hint: "画像タップ＝あげたことがある"
   },
   en: {
-    title: "🐶 Dog Food Check",
+    title: "🐶🐱 Pet Food Check",
     search: "Search",
     like: "⭕️Like",
     dislike: "❌Dislike",
@@ -429,10 +441,15 @@ function savePets() {
 let state = [];
 
 function loadPetState() {
+
+  const pet = pets.find(p => p.id === currentPet);
+  const currentFoods = pet.type === "dog" ? dogFoods : catFoods;
+
   state = [];
 
-  for (let i = 0; i < foods.length; i++) {
-    const saved = localStorage.getItem(`pet_${currentPet}_${i}`);
+  for (let i = 0; i < currentFoods.length; i++) {
+
+    const saved = localStorage.getItem(`pet_${currentPet}_${pet.type}_${i}`);
 
     if (saved) {
       state[i] = JSON.parse(saved);
@@ -531,18 +548,21 @@ function tapFood(i) {
 ===================== */
 function render() {
 
-document.querySelector("h1").textContent = text[lang].title;
-search.placeholder = text[lang].search;
-  
+  document.querySelector("h1").textContent = text[lang].title;
+  search.placeholder = text[lang].search;
+
   list.innerHTML = "";
+
+  const pet = pets.find(p => p.id === currentPet);
+  const currentFoods = pet.type === "dog" ? dogFoods : catFoods;
 
   const keyword = search.value.toLowerCase();
 
-  const order = [...foods.keys()].sort(sortIndex);
+  const order = [...currentFoods.keys()].sort(sortIndex);
 
   order.forEach(i => {
 
-    const food = foods[i];
+    const food = currentFoods[i];
     const s = state[i];
 
     if (!food.name.toLowerCase().includes(keyword)) return;
@@ -550,33 +570,29 @@ search.placeholder = text[lang].search;
     const div = document.createElement("div");
     div.className = "item";
 
-    if (s.like) {div.classList.add("like");}
-    else if (s.dislike) {div.classList.add("dislike");}
-    else if (s.given) {div.classList.add("given");} // ←ここが暗くなる対象
+    if (s.like) div.classList.add("like");
+    else if (s.dislike) div.classList.add("dislike");
+    else if (s.given) div.classList.add("given");
 
     div.innerHTML = `
-  <div class="img-box" onclick="tapFood(${i})">
-  <img src="${food.img}" loading="lazy">
-  <div class="label">${food.name}</div>
-</div>
+      <div class="img-box" onclick="tapFood(${i})">
+        <img src="${food.img}" loading="lazy">
+        <div class="label">${food.name}</div>
+      </div>
 
-  <div class="btns">
-    <button class="likeBtn">${text[lang].like}</button>
-<button class="dislikeBtn">${text[lang].dislike}</button>
-    <button class="givenBtn">✅済</button>
-  </div>
+      <div class="btns">
+        <button class="likeBtn">${text[lang].like}</button>
+        <button class="dislikeBtn">${text[lang].dislike}</button>
+      </div>
 
-  <div class="hint">${text[lang].hint}</div>
-  `;
+      <div class="hint">${text[lang].hint}</div>
+    `;
 
     div.querySelector(".likeBtn").onclick =
       () => setState(i, "like", div);
 
     div.querySelector(".dislikeBtn").onclick =
       () => setState(i, "dislike", div);
-
-    div.querySelector(".givenBtn").onclick =
-      () => setState(i, "given", div);
 
     list.appendChild(div);
   });
@@ -588,8 +604,13 @@ search.placeholder = text[lang].search;
    進捗
 ===================== */
 function updateProgress() {
+
+  const pet = pets.find(p => p.id === currentPet);
+  const currentFoods = pet.type === "dog" ? dogFoods : catFoods;
+
   let done = state.filter(s => s.like || s.dislike || s.given).length;
-  progress.textContent = `エサリスト ${done} / ${foods.length}`;
+
+  progress.textContent = `エサリスト ${done} / ${currentFoods.length}`;
 }
 
 /* =====================
