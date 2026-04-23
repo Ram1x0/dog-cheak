@@ -308,6 +308,43 @@ function addPet() {
     return;
   }
 
+function deletePet(id) {
+
+  if (!confirm("このペットを削除しますか？")) return;
+
+  // ペット削除
+  pets = pets.filter(p => p.id !== id);
+
+  if (pets.length === 0) {
+  pets.push({
+    id: Date.now(),
+    name: "ペット1",
+    type: "dog"
+  });
+}
+
+  // データ削除
+  for (let i = 0; i < foods.length; i++) {
+    localStorage.removeItem(`pet_${id}_${i}`);
+  }
+
+  // currentPet調整
+  if (currentPet === id) {
+    currentPet = pets.length ? pets[0].id : null;
+  }
+
+  savePets();
+  renderPets();
+
+  if (currentPet) {
+    loadPetState();
+    render();
+  } else {
+    list.innerHTML = "";
+    progress.textContent = "0 / 0";
+  }
+}
+
   const type = document.getElementById("petType").value;
 
   pets.push({
@@ -328,6 +365,26 @@ function renderPets() {
 
   pets.forEach((p, i) => {
     const btn = document.createElement("button");
+
+    // 長押しで削除
+let pressTimer;
+
+btn.onmousedown = () => {
+  pressTimer = setTimeout(() => {
+    deletePet(p.id);
+  }, 600);
+};
+
+btn.onmouseup = () => clearTimeout(pressTimer);
+btn.onmouseleave = () => clearTimeout(pressTimer);
+
+btn.ontouchstart = () => {
+  pressTimer = setTimeout(() => {
+    deletePet(p.id);
+  }, 600);
+};
+
+btn.ontouchend = () => clearTimeout(pressTimer);
 
     btn.textContent = `${p.type === "dog" ? "🐶" : "🐱"} ${p.name}`;
 
@@ -352,6 +409,7 @@ function renderPets() {
           currentPet = p.id;
           loadPetState();
           render();
+          updateProgress(); // ←これ追加（地味に重要）
           tapTimer = null;
         }, 250);
       }
@@ -551,8 +609,8 @@ function resetData() {
 /* =====================
    起動
 ===================== */
-loadPetState();
 renderPets();
+loadPetState();
 render();
 search.addEventListener("input", render);
 
