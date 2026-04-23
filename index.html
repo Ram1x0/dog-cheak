@@ -342,7 +342,7 @@ btn.ondblclick = () => {
 
     btn.onclick = () => {
       currentPet = i;
-      road();
+      loadPetState();
       render();
     };
 
@@ -357,11 +357,21 @@ function savePets() {
 /* =====================
    状態
 ===================== */
-const state = Array(foods.length).fill().map(() => ({
-  like: false,
-  dislike: false,
-  given: false
-}));
+let state = [];
+
+function loadPetState() {
+  state = [];
+
+  for (let i = 0; i < foods.length; i++) {
+    const saved = localStorage.getItem(`pet_${currentPet}_${i}`);
+
+    if (saved) {
+      state[i] = JSON.parse(saved);
+    } else {
+      state[i] = { like: false, dislike: false, given: false };
+    }
+  }
+}
 
 const list = document.getElementById("list");
 const search = document.getElementById("search");
@@ -516,7 +526,7 @@ function updateProgress() {
 /* =====================
    ロード
 ===================== */
-function load() {
+function {
   for (let i = 0; i < foods.length; i++) {
     const saved = localStorage.getItem("dog_" + i);
     if (saved) state[i] = JSON.parse(saved);
@@ -540,7 +550,7 @@ function resetData() {
 /* =====================
    起動
 ===================== */
-load();
+loadPetState();
 render();
 renderPets();
 search.addEventListener("input", render);
