@@ -262,6 +262,29 @@ const foods = [
 { name: "大根クリームポタージュ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/032.PNG" }
 ];
 
+let lang = "jp";
+
+const text = {
+  jp: {
+    title: "🐶 犬の好物チェック表",
+    search: "検索",
+    like: "⭕️好き",
+    dislike: "❌嫌い",
+    hint: "画像タップ＝あげたことがある"
+  },
+  en: {
+    title: "🐶 Dog Food Check",
+    search: "Search",
+    like: "⭕️Like",
+    dislike: "❌Dislike",
+    hint: "Tap image = Fed"
+  }
+};
+
+function setLang(l) {
+  lang = l;
+  render();
+}
 /* =====================
    状態
 ===================== */
@@ -360,6 +383,9 @@ function tapFood(i) {
 ===================== */
 function render() {
 
+document.querySelector("h1").textContent = text[lang].title;
+search.placeholder = text[lang].search;
+  
   list.innerHTML = "";
 
   const keyword = search.value.toLowerCase();
@@ -387,13 +413,13 @@ function render() {
 </div>
 
   <div class="btns">
-    <button class="likeBtn">⭕️好き</button>
-    <button class="dislikeBtn">❌嫌い</button>
+    <button class="likeBtn">${text[lang].like}</button>
+<button class="dislikeBtn">${text[lang].dislike}</button>
     <button class="givenBtn">✅済</button>
   </div>
 
-  <div class="hint">画像タップ＝「既にあげたエサ」</div>
-`;
+  <div class="hint">${text[lang].hint}</div>
+  `;
 
     div.querySelector(".likeBtn").onclick =
       () => setState(i, "like", div);
