@@ -22,7 +22,7 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.25);
   z-index: -1;
 }
 
@@ -97,6 +97,13 @@ button:active {
 .item.neutral {
   opacity: 0.45;
   filter: grayscale(60%);
+}
+
+/* 念のため強制で明るさ維持 */
+.item.like,
+.item.dislike {
+  opacity: 1;
+  filter: none;
 }
 
 /* 画像 */
@@ -291,10 +298,9 @@ function render() {
     const div = document.createElement("div");
     div.className = "item";
 
-    if (s.like) div.classList.add("like");
-    else if (s.dislike) div.classList.add("dislike");
-    else if (s.given) div.classList.add("given");
-    else div.classList.add("neutral");
+    if (s.like) {div.classList.add("like");}
+    else if (s.dislike) {div.classList.add("dislike");}
+    else if (s.given) {div.classList.add("neutral"); // ←ここが暗くなる対象}
 
     div.innerHTML = `
       <div class="img-box">
@@ -328,7 +334,7 @@ function render() {
 ===================== */
 function updateProgress() {
   let done = state.filter(s => s.like || s.dislike || s.given).length;
-  progress.textContent = `図鑑 ${done} / ${foods.length}`;
+  progress.textContent = `エサリスト ${done} / ${foods.length}`;
 }
 
 /* =====================
