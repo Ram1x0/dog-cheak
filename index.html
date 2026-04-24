@@ -402,12 +402,12 @@ const catFoods = [
 { name: "氷晶のマンボウ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/116.PNG" },
 { name: "氷晶のフグ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/117.PNG" },
 { name: "氷晶のタツノオトシゴ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/118.PNG" },
-{ name: "氷晶ジンベエザメ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/119.PNG" },
+{ name: "氷晶のジンベエザメ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/119.PNG" },
 { name: "紺色帽のディレクタコ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/120.PNG" },
-{ name: "茶色帽ディレクタコ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/121.PNG" },
+{ name: "茶色帽のディレクタコ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/121.PNG" },
 { name: "青色帽のディレクタコ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/122.PNG" },
 { name: "褐色帽のディレクタマダコ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/123.PNG" },
-{ name: "柄帽ディレクタマダコ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/124.PNG" }
+{ name: "柄帽のディレクタマダコ", img: "https://raw.githubusercontent.com/Ram1x0/dog-cheak/main/images/124.PNG" }
 ];
 
 let lang = "jp";
@@ -637,8 +637,12 @@ function playSound(type) {
   osc.stop(ctx.currentTime + 0.15);
 }
 
-  function toggleSound() {
+function toggleSound() {
   soundOn = !soundOn;
+  localStorage.setItem("soundOn", soundOn);
+
+  const btn = document.getElementById("soundBtn");
+  btn.textContent = soundOn ? "🔊 ON" : "🔇 OFF";
 }
 
 /* =====================
