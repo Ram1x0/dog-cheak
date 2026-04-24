@@ -104,11 +104,10 @@ button:active {
   transition: 0.1s;
 }
 
-/* ボタン領域 */.btns {
+/* ボタン領域 */
+.btns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
-  padding: 8px;
 }
 
 .btns button {
@@ -163,7 +162,7 @@ button:active {
 }
 
 .img-box:active {
-  transform: scale(0.96);
+  transform: scale(0.95);
 }
 
 .label {
@@ -239,8 +238,10 @@ button:active {
     <option value="cat">🐱 猫</option>
   </select>
   <button onclick="addPet()">＋ペット追加</button>
-  <button onclick="generateProfile()">📸 プロフィール生成</button>
+  <button onclick="toggleProfile()">📸 プロフィール生成</button>
 </div>
+
+  <button onclick="shareToX()">🐦 Xで共有</button><button onclick="shareToX()">🐦 Xで共有</button>
 
 <div id="petList"></div>
 
@@ -263,9 +264,12 @@ button:active {
 
 <h3>お問い合わせ</h3>
 <p>
-X（旧Twitter）：@_Ram1x
+X（旧Twitter）：
+<a href="https://x.com/_ram1x?s=21" target="_blank">
+  @_Ram1x
+</a>
 </p>
-
+  
 </div>
 
 <script>
@@ -788,7 +792,22 @@ function generateProfile() {
   ctx.fillRect(0, 0, 300, 300);
 
   const pet = pets.find(p => p.id === currentPet);
-  const foods = pet.type === "dog" ? dogFoods : catFoods;
+const currentFoods = pet.type === "dog" ? dogFoods : catFoods;
+
+for (let i = 0; i < currentFoods.length; i++) {
+
+  const s = state[i];
+
+  if (s.like) {
+    ctx.fillText("好き: " + currentFoods[i].name, 20, y);
+    y += 20;
+  }
+
+  if (s.dislike) {
+    ctx.fillText("嫌い: " + currentFoods[i].name, 20, y);
+    y += 20;
+  }
+}
 
   ctx.fillStyle = "#000";
   ctx.font = "16px sans-serif";
@@ -807,10 +826,32 @@ function generateProfile() {
       ctx.fillText("嫌い: " + foods[i].name, 20, y);
       y += 20;
     }
-
+    
   });
 
-  document.getElementById("profileImg").src = canvas.toDataURL();
+  const img = document.getElementById("profileImg");
+  img.src = canvas.toDataURL();
+  img.style.display = "block";
+  
+}
+
+  function shareToX() {
+
+  const pet = pets.find(p => p.id === currentPet);
+  const currentFoods = pet.type === "dog" ? dogFoods : catFoods;
+
+  let text = `【${pet.name}の好物リスト】\n`;
+
+  state.forEach((s, i) => {
+    if (s.like) text += "⭕️ " + currentFoods[i].name + "\n";
+    if (s.dislike) text += "❌ " + currentFoods[i].name + "\n";
+  });
+
+  text += "\n#ペット好物チェック";
+
+  const url = "https://x.com/compose/post" + encodeURIComponent(text);
+
+  window.open(url, "_blank");
 }
 
 /* =====================
