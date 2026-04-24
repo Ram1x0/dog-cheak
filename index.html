@@ -241,8 +241,6 @@ button:active {
   <button onclick="toggleProfile()">📸 プロフィール生成</button>
 </div>
 
-  <button onclick="shareToX()">🐦 Xで共有</button><button onclick="shareToX()">🐦 Xで共有</button>
-
 <div id="petList"></div>
 
 <div id="progress">0 / 0</div>
@@ -783,31 +781,25 @@ function resetData() {
   render();
 }
 
+let generating = false;
+
 function generateProfile() {
+
+  if (generating) return;
+  generating = true;
+
+  setTimeout(() => generating = false, 300);
 
   const canvas = document.getElementById("profileCanvas");
   const ctx = canvas.getContext("2d");
 
+  const pet = pets.find(p => p.id === currentPet);
+  const currentFoods = pet.type === "dog" ? dogFoods : catFoods;
+
+  ctx.clearRect(0, 0, 300, 300);
+
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, 300, 300);
-
-  const pet = pets.find(p => p.id === currentPet);
-const currentFoods = pet.type === "dog" ? dogFoods : catFoods;
-
-for (let i = 0; i < currentFoods.length; i++) {
-
-  const s = state[i];
-
-  if (s.like) {
-    ctx.fillText("好き: " + currentFoods[i].name, 20, y);
-    y += 20;
-  }
-
-  if (s.dislike) {
-    ctx.fillText("嫌い: " + currentFoods[i].name, 20, y);
-    y += 20;
-  }
-}
 
   ctx.fillStyle = "#000";
   ctx.font = "16px sans-serif";
@@ -815,43 +807,27 @@ for (let i = 0; i < currentFoods.length; i++) {
 
   let y = 60;
 
-  state.forEach((s, i) => {
+  for (let i = 0; i < currentFoods.length; i++) {
+
+    const s = state[i];
+    if (!s) continue;
 
     if (s.like) {
-      ctx.fillText("好き: " + foods[i].name, 20, y);
+      ctx.fillText("好き: " + currentFoods[i].name, 20, y);
       y += 20;
     }
 
     if (s.dislike) {
-      ctx.fillText("嫌い: " + foods[i].name, 20, y);
+      ctx.fillText("嫌い: " + currentFoods[i].name, 20, y);
       y += 20;
     }
-    
-  });
+
+    if (y > 280) break;
+  }
 
   const img = document.getElementById("profileImg");
-  img.src = canvas.toDataURL();
+  img.src = canvas.toDataURL("image/png");
   img.style.display = "block";
-  
-}
-
-  function shareToX() {
-
-  const pet = pets.find(p => p.id === currentPet);
-  const currentFoods = pet.type === "dog" ? dogFoods : catFoods;
-
-  let text = `【${pet.name}の好物リスト】\n`;
-
-  state.forEach((s, i) => {
-    if (s.like) text += "⭕️ " + currentFoods[i].name + "\n";
-    if (s.dislike) text += "❌ " + currentFoods[i].name + "\n";
-  });
-
-  text += "\n#ペット好物チェック";
-
-  const url = "https://x.com/compose/post" + encodeURIComponent(text);
-
-  window.open(url, "_blank");
 }
 
 /* =====================
