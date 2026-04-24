@@ -239,18 +239,15 @@ button:active {
     <option value="cat">🐱 猫</option>
   </select>
   <button onclick="addPet()">＋ペット追加</button>
+  <button onclick="generateProfile()">📸 プロフィール生成</button>
 </div>
 
 <div id="petList"></div>
 
 <div id="progress">0 / 0</div>
 
-<div style="text-align:center; margin:10px;">
-  <button onclick="generateProfile()">📸 プロフィール生成</button>
-</div>
-
 <canvas id="profileCanvas" width="300" height="300" style="display:none;"></canvas>
-<img id="profileImg" style="width:100%; max-width:300px; display:block; margin:auto;">
+<img id="profileImg" style="width:100%; max-width:300px; display:none; margin:auto;">
   
 <div id="list" class="grid"></div>
 
@@ -654,6 +651,23 @@ function setState(i, type, div) {
   playSound(type);
   render();
 }
+
+let profileVisible = false;
+
+function toggleProfile() {
+
+  const img = document.getElementById("profileImg");
+
+  if (profileVisible) {
+    img.style.display = "none";
+    profileVisible = false;
+    return;
+  }
+
+  generateProfile();
+  img.style.display = "block";
+  profileVisible = true;
+}
   
 function toggleGiven(i) {
   state[i].given = !state[i].given;
@@ -774,6 +788,7 @@ function generateProfile() {
   ctx.fillRect(0, 0, 300, 300);
 
   const pet = pets.find(p => p.id === currentPet);
+  const foods = pet.type === "dog" ? dogFoods : catFoods;
 
   ctx.fillStyle = "#000";
   ctx.font = "16px sans-serif";
@@ -782,12 +797,17 @@ function generateProfile() {
   let y = 60;
 
   state.forEach((s, i) => {
-    const foods = pet.type === "dog" ? dogFoods : catFoods;
 
     if (s.like) {
       ctx.fillText("好き: " + foods[i].name, 20, y);
       y += 20;
     }
+
+    if (s.dislike) {
+      ctx.fillText("嫌い: " + foods[i].name, 20, y);
+      y += 20;
+    }
+
   });
 
   document.getElementById("profileImg").src = canvas.toDataURL();
