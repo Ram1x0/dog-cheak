@@ -411,7 +411,9 @@ const catFoods = [
 ];
 
 let lang = "jp";
-let soundOn = true;
+  
+let soundOn = JSON.parse(localStorage.getItem("soundOn") || "true");
+  if (soundOn === null) soundOn = true;
   
 const text = {
   jp: {
@@ -435,9 +437,6 @@ let pets = JSON.parse(localStorage.getItem("pets")) || [
 ];
 
 let currentPet = pets[0].id;
-
-let soundOn = JSON.parse(localStorage.getItem("soundOn"));
- if (soundOn === null) soundOn = true;
 
 window.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("soundBtn");
