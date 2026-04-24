@@ -225,7 +225,7 @@ button:active {
 <div style="text-align:center; margin-bottom:8px;">
   <button onclick="setLang('jp')">🇯🇵 日本語</button>
   <button onclick="setLang('en')">🇺🇸 English</button>
-  <button onclick="toggleSound()">🔊</button>
+  <button id="soundBtn" onclick="toggleSound()">🔊 ON</button>
 </div>
 
 <div class="topbar">
@@ -435,6 +435,14 @@ let pets = JSON.parse(localStorage.getItem("pets")) || [
 ];
 
 let currentPet = pets[0].id;
+
+let soundOn = JSON.parse(localStorage.getItem("soundOn"));
+ if (soundOn === null) soundOn = true;
+
+window.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("soundBtn");
+  btn.textContent = soundOn ? "🔊 ON" : "🔇 OFF";
+});
   
 function setLang(l) {
   lang = l;
@@ -642,7 +650,9 @@ function toggleSound() {
   localStorage.setItem("soundOn", soundOn);
 
   const btn = document.getElementById("soundBtn");
-  btn.textContent = soundOn ? "🔊 ON" : "🔇 OFF";
+  if (btn) {
+    btn.textContent = soundOn ? "🔊 ON" : "🔇 OFF";
+  }
 }
 
 /* =====================
