@@ -482,38 +482,31 @@ function renderPets() {
 
     // 長押し削除
     let pressTimer;
-    let isLongPress = false;
 
     btn.onmousedown = () => {
-      isLongPress = false;
-      pressTimer = setTimeout(() => {
-        isLongPress = true;
-        deletePet(p.id);
-      }, 600);
-    };
+    pressTimer = setTimeout(() => {
+    deletePet(p.id);
+  }, 600);
+};
 
     btn.onmouseup = () => clearTimeout(pressTimer);
     btn.onmouseleave = () => clearTimeout(pressTimer);
 
     btn.ontouchstart = () => {
-      isLongPress = false;
-      pressTimer = setTimeout(() => {
-        isLongPress = true;
-        deletePet(p.id);
-      }, 600);
-    };
+    pressTimer = setTimeout(() => {
+    deletePet(p.id);
+  }, 600);
+};
 
     btn.ontouchend = () => clearTimeout(pressTimer);
 
-    // 通常タップ（切り替え）
-    btn.onclick = () => {
-      if (isLongPress) return;
-
-      currentPet = p.id;
-      loadPetState();
-      renderPets();
-      render();
-    };
+// タップで切り替え
+btn.onclick = () => {
+  currentPet = p.id;
+  loadPetState();
+  renderPets();
+  render();
+};
 
     area.appendChild(btn);
   });
@@ -599,10 +592,10 @@ function playSound(type) {
 ===================== */
 function setState(i, type, div) {
 
+  state[i][type] = !state[i][type];
+
   const pet = pets.find(p => p.id === currentPet);
   localStorage.setItem(`pet_${currentPet}_${pet.type}_${i}`, JSON.stringify(state[i]));
-
-  state[i][type] = !state[i][type];
 
   if (type === "like") state[i].dislike = false;
   if (type === "dislike") state[i].like = false;
@@ -666,7 +659,7 @@ function render() {
     else if (s.given) div.classList.add("given");
 
     div.innerHTML = `
-      <div class="img-box" onclick="tapFood(${i})">
+      <div class="img-box">
         <img src="${food.img}" loading="lazy">
         <div class="label">${food.name}</div>
       </div>
@@ -684,6 +677,9 @@ function render() {
 
     div.querySelector(".dislikeBtn").onclick =
       () => setState(i, "dislike", div);
+
+    div.querySelector(".img-box").onclick = 
+      () => tapFood(i);
 
     list.appendChild(div);
   });
