@@ -202,6 +202,11 @@ button:active {
 .btns button {
   min-height: 36px;
 }
+
+.petBtn.active {
+  background: #ffe082;
+}
+  
 </style>
 </head>
 
@@ -486,21 +491,45 @@ btn.ontouchend = () => clearTimeout(pressTimer);
 
     btn.textContent = `${p.type === "dog" ? "🐶" : "🐱"} ${p.name}`;
 
-    if (p.id === currentPet) {
-      btn.style.background = "#ffe082";
-    }
+if (p.id === currentPet) {
+    btn.className = "petBtn";
 
-    btn.onclick = () => {
-      if (tapTimer) {
-        clearTimeout(tapTimer);
-        tapTimer = null;
+if (p.id === currentPet) {
+    btn.classList.add("active");
+}
 
-        const newName = prompt("名前変更", p.name);
-        if (newName) {
-          pets[i].name = newName;
-          savePets();
-          renderPets();
-        }
+    let isLongPress = false;
+let pressTimer;
+
+btn.onmousedown = () => {
+  isLongPress = false;
+  pressTimer = setTimeout(() => {
+    isLongPress = true;
+    deletePet(p.id);
+  }, 600);
+};
+
+btn.onmouseup = () => clearTimeout(pressTimer);
+btn.onmouseleave = () => clearTimeout(pressTimer);
+
+btn.ontouchstart = () => {
+  isLongPress = false;
+  pressTimer = setTimeout(() => {
+    isLongPress = true;
+    deletePet(p.id);
+  }, 600);
+};
+
+btn.ontouchend = () => clearTimeout(pressTimer);
+
+btn.onclick = () => {
+  if (isLongPress) return;
+
+  currentPet = p.id;
+  loadPetState();
+  renderPets();
+  render();
+};
 
       } else {
         tapTimer = setTimeout(() => {
@@ -597,12 +626,15 @@ function playSound(type) {
 ===================== */
 function setState(i, type, div) {
 
+  const pet = pets.find(p => p.id === currentPet);
+
   state[i][type] = !state[i][type];
 
   if (type === "like") state[i].dislike = false;
   if (type === "dislike") state[i].like = false;
 
-  localStorage.setItem(`pet_${currentPet}_${i}`, JSON.stringify(state[i]));
+  const pet = pets.find(p => p.id === currentPet);
+  localStorage.setItem(`pet_${currentPet}_${pet.type}_${i}`, JSON.stringify(state[i]));
 
   div.classList.add("pop");
   setTimeout(() => div.classList.remove("pop"), 200);
@@ -610,10 +642,11 @@ function setState(i, type, div) {
   playSound(type);
   render();
 }
-
+  
 function toggleGiven(i) {
   state[i].given = !state[i].given;
-  localStorage.setItem(`pet_${currentPet}_${i}`, JSON.stringify(state[i]));
+  const pet = pets.find(p => p.id === currentPet);
+  localStorage.setItem(`pet_${currentPet}_${pet.type}_${i}`, JSON.stringify(state[i]));
   playSound("given"); // ←これ入れるとゲーム感UP
   render();
 }
@@ -622,7 +655,8 @@ function toggleGiven(i) {
 function tapFood(i) {
   state[i].given = !state[i].given;
 
-  localStorage.setItem(`pet_${currentPet}_${i}`, JSON.stringify(state[i]));
+  const pet = pets.find(p => p.id === currentPet);
+  localStorage.setItem(`pet_${currentPet}_${pet.type}_${i}`, JSON.stringify(state[i]));
 
   playSound("given");
 
@@ -705,10 +739,13 @@ function updateProgress() {
 function resetData() {
   if (!confirm("このペットのデータだけリセットしますか？")) return;
 
-  for (let i = 0; i < foods.length; i++) {
-    localStorage.removeItem(`pet_${currentPet}_${i}`);
-    state[i] = { like: false, dislike: false, given: false };
-  }
+  const pet = pets.find(p => p.id === currentPet);
+  const currentFoods = pet.type === "dog" ? dogFoods : catFoods;
+
+  for (let i = 0; i < currentFoods.length; i++) {
+  localStorage.removeItem(`pet_${currentPet}_${pet.type}_${i}`);
+  state[i] = { like: false, dislike: false, given: false };
+}
 
   render();
 }
