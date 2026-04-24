@@ -225,6 +225,7 @@ button:active {
 <div style="text-align:center; margin-bottom:8px;">
   <button onclick="setLang('jp')">🇯🇵 日本語</button>
   <button onclick="setLang('en')">🇺🇸 English</button>
+  <button onclick="toggleSound()">🔊</button>
 </div>
 
 <div class="topbar">
@@ -612,6 +613,7 @@ function sortIndex(a, b) {
    サウンド
 ===================== */
 function playSound(type) {
+  if (!soundOn) return;
   const ctx = new (window.AudioContext || window.webkitAudioContext)();
 
   const osc = ctx.createOscillator();
@@ -632,6 +634,10 @@ function playSound(type) {
 
   osc.start();
   osc.stop(ctx.currentTime + 0.15);
+}
+
+  function toggleSound() {
+  soundOn = !soundOn;
 }
 
 /* =====================
@@ -777,6 +783,7 @@ function resetData() {
   localStorage.removeItem(`pet_${currentPet}_${pet.type}_${i}`);
   state[i] = { like: false, dislike: false, given: false };
 }
+  document.getElementById("profileImg").style.display = "none";
 
   render();
 }
