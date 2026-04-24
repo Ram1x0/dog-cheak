@@ -427,43 +427,38 @@ function deletePet(id) {
 
   if (!confirm("このペットを削除しますか？")) return;
 
-  // ペット削除
-  pets = pets.filter(p => p.id !== id);
-
-  if (pets.length === 0) {
-  pets.push({
-    id: Date.now(),
-    name: "ペット1",
-    type: "dog"
-  });
-}
-
-  // データ削除
+  // 👇削除前に取得（←これが超重要）
   const pet = pets.find(p => p.id === id);
   const currentFoods = pet.type === "dog" ? dogFoods : catFoods;
 
+  // データ削除
   for (let i = 0; i < currentFoods.length; i++) {
-  localStorage.removeItem(`pet_${id}_${pet.type}_${i}`);
-}
+    localStorage.removeItem(`pet_${id}_${pet.type}_${i}`);
+  }
+
+  // ペット削除
+  pets = pets.filter(p => p.id !== id);
+
+  // 0匹対策
+  if (pets.length === 0) {
+    pets.push({
+      id: Date.now(),
+      name: "ペット1",
+      type: "dog"
+    });
+  }
 
   // currentPet調整
   if (currentPet === id) {
-    currentPet = pets.length ? pets[0].id : null;
+    currentPet = pets[0].id;
   }
 
   savePets();
-  renderPets();
 
-  if (currentPet) {
-    loadPetState();
-    render();
-  } else {
-    list.innerHTML = "";
-    progress.textContent = "0 / 0";
-  }
-
-  savePets();
+  // 👇これを必ず最後に
+  loadPetState();
   renderPets();
+  render();
 }
 
 function renderPets() {
@@ -500,12 +495,30 @@ function renderPets() {
 
     btn.ontouchend = () => clearTimeout(pressTimer);
 
-// タップで切り替え
+let tapTimer = null;
+
 btn.onclick = () => {
-  currentPet = p.id;
-  loadPetState();
-  renderPets();
-  render();
+  if (tapTimer) {
+    clearTimeout(tapTimer);
+    tapTimer = null;
+
+    // 👇名前変更
+    const newName = prompt("名前変更", p.name);
+    if (newName && newName.trim() !== "") {
+      pets[i].name = newName;
+      savePets();
+      renderPets();
+    }
+
+  } else {
+    tapTimer = setTimeout(() => {
+      currentPet = p.id;
+      loadPetState();
+      renderPets();
+      render();
+      tapTimer = null;
+    }, 250);
+  }
 };
 
     area.appendChild(btn);
