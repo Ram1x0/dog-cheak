@@ -410,6 +410,17 @@ function addPet() {
     alert("最大13匹まで");
     return;
   }
+
+  const type = document.getElementById("petType").value;
+
+  pets.push({
+    id: Date.now(),
+    name: "新しいペット",
+    type: type
+  });
+
+  savePets();
+  renderPets();
 }
 
 function deletePet(id) {
@@ -450,14 +461,6 @@ function deletePet(id) {
     list.innerHTML = "";
     progress.textContent = "0 / 0";
   }
-
-  const type = document.getElementById("petType").value;
-
-  pets.push({
-  id: Date.now(),
-  name: "新しいペット",
-  type: type
-});
 
   savePets();
   renderPets();
@@ -597,14 +600,12 @@ function playSound(type) {
 function setState(i, type, div) {
 
   const pet = pets.find(p => p.id === currentPet);
+  localStorage.setItem(`pet_${currentPet}_${pet.type}_${i}`, JSON.stringify(state[i]));
 
   state[i][type] = !state[i][type];
 
   if (type === "like") state[i].dislike = false;
   if (type === "dislike") state[i].like = false;
-
-  const pet = pets.find(p => p.id === currentPet);
-  localStorage.setItem(`pet_${currentPet}_${pet.type}_${i}`, JSON.stringify(state[i]));
 
   div.classList.add("pop");
   setTimeout(() => div.classList.remove("pop"), 200);
