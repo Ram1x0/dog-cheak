@@ -208,7 +208,7 @@ button:active {
 
   /* 背景ぼかし */
 .modal {
-  pointer-events: none; /* ←これに変更 */
+  pointer-events: auto; /* ←これに変更 */
   position: fixed;
   inset: 0;
   background: rgba(255,255,255,0.25);
@@ -1036,8 +1036,6 @@ for (let i = 0; i < currentFoods.length; i++) {
 
   if (y > 180) break;
 }
-  
-  let y = 60;
 
   for (let i = 0; i < currentFoods.length; i++) {
 
