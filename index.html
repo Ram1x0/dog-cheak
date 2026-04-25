@@ -56,21 +56,24 @@ input {
 }
 
 button {
-  padding: 8px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 3px 0 rgba(0,0,0,0.2);
-  font-family: inherit;
+  padding: 10px;
+  border-radius: 14px;
 
-  transition: 0.1s; /* ←ここ追加 */
+  background: linear-gradient(145deg, #ffffff, #e6e6e6);
+
+  box-shadow:
+    0 4px 0 #cfcfcf,
+    0 6px 10px rgba(0,0,0,0.1);
+
+  transition: all 0.08s ease;
 }
 
 button:active {
-  transform: scale(0.9);
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
-}
-  
+  transform: translateY(4px) scale(0.95);
+
+  box-shadow:
+    inset 0 2px 5px rgba(0,0,0,0.2);
+}  
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -392,13 +395,9 @@ button:active {
 
 <div id="progress">0 / 0</div>
 
-<canvas id="profileCanvas" width="300" height="300" style="display:none;"></canvas>
+<canvas id="profileCanvas" width="400" height="200" style="display:none;"></canvas>
 <img id="profileImg" onclick="selectProfileImage()"
      style="width:100%; max-width:300px; display:none; margin:auto; cursor:pointer;">
-
-  <div style="text-align:center; font-size:11px; opacity:0.7;">
-  画像タップで写真追加
-</div>
   
 <div id="list" class="grid"></div>
 
@@ -782,17 +781,21 @@ function playSound(type) {
   osc.connect(gain);
   gain.connect(ctx.destination);
 
-  // 👇ぽこぽこ感
-  osc.type = "triangle";
+  // ぷち音（短くて軽い）
+  osc.type = "sine";
 
-  osc.frequency.setValueAtTime(600, ctx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.1);
+  const base =
+    type === "like" ? 800 :
+    type === "dislike" ? 300 : 500;
 
-  gain.gain.setValueAtTime(0.2, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+  osc.frequency.setValueAtTime(base, ctx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(base / 2, ctx.currentTime + 0.08);
+
+  gain.gain.setValueAtTime(0.25, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
 
   osc.start();
-  osc.stop(ctx.currentTime + 0.15);
+  osc.stop(ctx.currentTime + 0.1);
 }
 
 function toggleSound() {
@@ -804,7 +807,7 @@ function toggleSound() {
     btn.textContent = soundOn ? "🔊 ON" : "🔇 OFF";
   }
 }
-
+  
 /* =====================
    状態変更
 ===================== */
@@ -971,30 +974,51 @@ function generateProfile() {
   const pet = pets.find(p => p.id === currentPet);
   const currentFoods = pet.type === "dog" ? dogFoods : catFoods;
 
-   ctx.clearRect(0, 0, 300, 300);
+   ctx.clearRect(0, 0, 400, 200);
 
-   ctx.fillStyle = "#fff8f0";
-   ctx.fillRect(0, 0, 300, 300);
+/* 背景カード */
+ctx.fillStyle = "#fff";
+ctx.fillRect(0, 0, 400, 200);
 
-   ctx.strokeStyle = "#ffb6c1";
-   ctx.lineWidth = 4;
-   ctx.strokeRect(0, 0, 300, 300);
+/* 枠 */
+ctx.strokeStyle = "#ffb6c1";
+ctx.lineWidth = 4;
+ctx.strokeRect(0, 0, 400, 200);
 
-   ctx.font = "bold 18px Mochiy Pop One";
-   ctx.fillText(pet.name, 80, 40);
-
-// 左上アイコン表示
+if (!uploadedImage) {
+  ctx.fillStyle = "#aaa";
+  ctx.font = "12px Mochiy Pop One";
+  ctx.fillText("タップで写真追加", 15, 160);
+}
+  
+/* 画像エリア（左） */
 if (uploadedImage) {
-  ctx.save();
+  ctx.drawImage(uploadedImage, 10, 25, 120, 120);
+}
 
-  ctx.beginPath();
-  ctx.arc(40, 40, 25, 0, Math.PI * 2);
-  ctx.closePath();
-  ctx.clip();
+/* 名前（右側） */
+ctx.font = "bold 18px Mochiy Pop One";
+ctx.fillStyle = "#333";
+ctx.fillText(pet.name, 150, 40);
 
-  ctx.drawImage(uploadedImage, 15, 15, 50, 50);
+/* 好き嫌い（右側リスト） */
+let y = 70;
 
-  ctx.restore();
+for (let i = 0; i < currentFoods.length; i++) {
+  const s = state[i];
+  if (!s) continue;
+
+  if (s.like) {
+    ctx.fillText("好き: " + currentFoods[i].name, 150, y);
+    y += 18;
+  }
+
+  if (s.dislike) {
+    ctx.fillText("嫌い: " + currentFoods[i].name, 150, y);
+    y += 18;
+  }
+
+  if (y > 180) break;
 }
   
   let y = 60;
