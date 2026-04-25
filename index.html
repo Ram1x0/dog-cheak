@@ -1077,9 +1077,6 @@ function closeHelp() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  if (localStorage.getItem("hideHelp") === null) {
-  localStorage.setItem("hideHelp", "false");
-}
 
   // 🔊ボタン
   const btn = document.getElementById("soundBtn");
@@ -1093,11 +1090,9 @@ window.addEventListener("DOMContentLoaded", () => {
   render();
 
   // 📖ポップアップ
-  const modal = document.getElementById("helpModal");
+  const hide = localStorage.getItem("hideHelp");
 
-  const hide = localStorage.getItem("hideHelp") || "false";
-
-  if (hide === "false") {
+  if (hide !== "true") {
   setTimeout(() => {
     modal.style.display = "flex";
   }, 300);
