@@ -208,6 +208,7 @@ button:active {
 
   /* 背景ぼかし */
 .modal {
+  pointer-events: none; /* ←これに変更 */
   position: fixed;
   inset: 0;
   background: rgba(255,255,255,0.25);
@@ -220,11 +221,12 @@ button:active {
 
 /* ぷるぷるカード */
 .modalContent {
+  pointer-events: auto;
   position: relative;
   width: 85%;
   max-width: 320px;
   padding: 20px 16px 30px;
-
+  
   border-radius: 20px;
 
   /* クリアパステル */
@@ -262,7 +264,7 @@ button:active {
   }
 }
 
-  .modalContent::before {
+.modalContent::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -360,7 +362,7 @@ button:active {
 
 <body>
 
-  <div id="helpModal" class="modal">
+  <div id="helpModal" class="modal" style="display:none;">
   <div class="modalContent">
 
     <button class="closeBtn" onclick="closeHelp()">×</button>
