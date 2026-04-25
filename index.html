@@ -369,7 +369,10 @@ button:active {
   <button onclick="setLang('jp')">🇯🇵 日本語</button>
   <button onclick="setLang('en')">🇺🇸 English</button>
   <button id="soundBtn" onclick="toggleSound()">🔊 ON</button>
+  <button onclick="openHelp()">❓ 説明</button>
 </div>
+
+<input type="file" id="hiddenUpload" accept="image/*" style="display:none;">
 
 <div class="topbar">
   <input id="search" placeholder="検索">
@@ -386,17 +389,16 @@ button:active {
 </div>
 
 <div id="petList"></div>
-<div style="font-size:11px; text-align:center; opacity:0.8; margin:6px 0;">
-  📝 操作説明<br>
-  ・タップ＝ペット切り替え<br>
-  ・長押し＝削除<br>
-  ・ダブルタップ＝名前変更
-</div>
 
 <div id="progress">0 / 0</div>
 
 <canvas id="profileCanvas" width="300" height="300" style="display:none;"></canvas>
-<img id="profileImg" style="width:100%; max-width:300px; display:none; margin:auto;">
+<img id="profileImg" onclick="selectProfileImage()"
+     style="width:100%; max-width:300px; display:none; margin:auto; cursor:pointer;">
+
+  <div style="text-align:center; font-size:11px; opacity:0.7;">
+  画像タップで写真追加
+</div>
   
 <div id="list" class="grid"></div>
 
@@ -953,6 +955,9 @@ function resetData() {
 
 let generating = false;
 
+/* =====================
+   プロフィール生成
+===================== */
 function generateProfile() {
 
   if (generating) return;
@@ -978,6 +983,20 @@ function generateProfile() {
    ctx.font = "bold 18px Mochiy Pop One";
    ctx.fillText(pet.name, 80, 40);
 
+// 左上アイコン表示
+if (uploadedImage) {
+  ctx.save();
+
+  ctx.beginPath();
+  ctx.arc(40, 40, 25, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.clip();
+
+  ctx.drawImage(uploadedImage, 15, 15, 50, 50);
+
+  ctx.restore();
+}
+  
   let y = 60;
 
   for (let i = 0; i < currentFoods.length; i++) {
@@ -1003,7 +1022,30 @@ function generateProfile() {
   img.style.display = "block";
 }
 
-  function closeHelp() {
+function selectProfileImage() {
+  document.getElementById("hiddenUpload").click();
+}
+
+let uploadedImage = null;
+
+document.getElementById("hiddenUpload").addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(event) {
+    uploadedImage = new Image();
+    uploadedImage.src = event.target.result;
+
+    // 画像更新後に再生成
+    generateProfile();
+  };
+
+  reader.readAsDataURL(file);
+});
+
+function closeHelp() {
   const modal = document.getElementById("helpModal");
   const hide = document.getElementById("hideHelp").checked;
 
@@ -1019,6 +1061,10 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("helpModal").style.display = "none";
   }
 });
+
+function openHelp() {
+  document.getElementById("helpModal").style.display = "flex";
+}
 
 /* =====================
    起動
