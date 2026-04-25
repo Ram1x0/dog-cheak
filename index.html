@@ -213,7 +213,7 @@ button:active {
   inset: 0;
   background: rgba(255,255,255,0.25);
   backdrop-filter: blur(10px);
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   z-index: 9999;
@@ -362,7 +362,7 @@ button:active {
 
 <body>
 
-  <div id="helpModal" class="modal" style="display:none;">
+  <div id="helpModal" class="modal">
   <div class="modalContent">
 
     <button class="closeBtn" onclick="closeHelp()">×</button>
@@ -1097,7 +1097,7 @@ window.addEventListener("DOMContentLoaded", () => {
   if (hide !== "true") {
     setTimeout(() => {
       modal.style.display = "flex";
-    }, 100); // ←ちょい遅延で確実表示
+    }, 300); // ←ちょい遅延で確実表示
   }
 
   // 🔍検索イベント
