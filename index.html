@@ -1077,6 +1077,7 @@ function closeHelp() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  localStorage.removeItem("hideHelp");
 
   // 🔊ボタン
   const btn = document.getElementById("soundBtn");
