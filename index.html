@@ -131,6 +131,12 @@ button:active {
   touch-action: manipulation;
 }
 
+.closeBtn {
+  pointer-events: auto;
+  z-index: 10000;
+  touch-action: manipulation;
+}
+  
 /* 2ボタン専用に3つ目は非表示 */
 .givenBtn {
   display: none;
@@ -142,6 +148,14 @@ button:active {
   text-align: center;
   opacity: 0.7;
   padding: 4px 0 8px;
+}
+
+.modal {
+  pointer-events: auto;
+}
+
+.modalContent {
+  pointer-events: auto;
 }
 
 /* 状態 */
@@ -349,7 +363,7 @@ button:active {
   <div id="helpModal" class="modal">
   <div class="modalContent">
 
-    <button class="closeBtn" onclick="closeHelp()">×</button>
+    <button class="closeBtn">×</button>
 
     <h2>📖 操作説明</h2>
 
@@ -1081,9 +1095,14 @@ function closeHelp() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+
   if (localStorage.getItem("hideHelp") === "true") {
     document.getElementById("helpModal").style.display = "none";
   }
+
+  // 👇これ追加
+  document.querySelector(".closeBtn").addEventListener("click", closeHelp);
+
 });
 
 function openHelp() {
