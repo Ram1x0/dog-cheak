@@ -1096,15 +1096,20 @@ function closeHelp() {
 
 window.addEventListener("DOMContentLoaded", () => {
 
+  const modal = document.getElementById("helpModal");
+
   if (localStorage.getItem("hideHelp") === "true") {
-    document.getElementById("helpModal").style.display = "none";
+    modal.style.display = "none";
   }
 
-  // 👇これ追加
-  document.querySelector(".closeBtn").addEventListener("click", closeHelp);
+  const btns = document.querySelectorAll(".closeBtn");
+
+  btns.forEach(btn => {
+    btn.addEventListener("click", closeHelp);
+  });
 
 });
-
+  
 function openHelp() {
   document.getElementById("helpModal").style.display = "flex";
 }
