@@ -1075,33 +1075,35 @@ function closeHelp() {
 
   modal.style.display = "none";
 }
-
+  
 window.addEventListener("DOMContentLoaded", () => {
 
-  console.log("起動した");
-
-  // 🔊ボタン
-  const btn = document.getElementById("soundBtn");
-  if (btn) {
-    btn.textContent = soundOn ? "🔊 ON" : "🔇 OFF";
-  }
-  
   // 🐶初期描画
   renderPets();
   loadPetState();
   render();
 
+  // 🔍検索イベント（←ここに移動！）
+  const search = document.getElementById("search");
+  if (search) {
+    search.addEventListener("input", render);
+  }
+
+    // 🔊ボタン
+  const btn = document.getElementById("soundBtn");
+  if (btn) {
+    btn.textContent = soundOn ? "🔊 ON" : "🔇 OFF";
+  }
+
   // 📖ポップアップ
+  const modal = document.getElementById("helpModal");
   const hide = localStorage.getItem("hideHelp");
 
   if (hide !== "true") {
-  setTimeout(() => {
-    modal.style.display = "flex";
-  }, 300);
-}
-
-  // 🔍検索イベント
-  search.addEventListener("input", render);
+    setTimeout(() => {
+      modal.style.display = "flex";
+    }, 300);
+  }
 
 });
   
