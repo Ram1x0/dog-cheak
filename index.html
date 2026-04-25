@@ -1083,6 +1083,11 @@ window.addEventListener("DOMContentLoaded", () => {
   if (btn) {
     btn.textContent = soundOn ? "🔊 ON" : "🔇 OFF";
   }
+  
+  // 🐶初期描画
+  renderPets();
+  loadPetState();
+  render();
 
   // 📖ポップアップ
   const modal = document.getElementById("helpModal");
@@ -1094,11 +1099,6 @@ window.addEventListener("DOMContentLoaded", () => {
       modal.style.display = "flex";
     }, 100); // ←ちょい遅延で確実表示
   }
-  
-  // 🐶初期描画
-  renderPets();
-  loadPetState();
-  render();
 
   // 🔍検索イベント
   search.addEventListener("input", render);
