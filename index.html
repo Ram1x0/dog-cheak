@@ -603,11 +603,6 @@ let pets = JSON.parse(localStorage.getItem("pets")) || [
 ];
 
 let currentPet = pets[0].id;
-
-window.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("soundBtn");
-  btn.textContent = soundOn ? "🔊 ON" : "🔇 OFF";
-});
   
 function setLang(l) {
   lang = l;
@@ -1096,28 +1091,31 @@ function closeHelp() {
 
 window.addEventListener("DOMContentLoaded", () => {
 
+  // 🔊ボタン
+  const btn = document.getElementById("soundBtn");
+  if (btn) {
+    btn.textContent = soundOn ? "🔊 ON" : "🔇 OFF";
+  }
+
+  // 📖ポップアップ
   const modal = document.getElementById("helpModal");
 
   if (localStorage.getItem("hideHelp") === "true") {
     modal.style.display = "none";
   } else {
-    modal.style.display = "flex"; // ←これ追加
+    modal.style.display = "flex";
   }
+
+  // 🐶初期描画
+  renderPets();
+  loadPetState();
+  render();
+
+  // 🔍検索イベント
+  search.addEventListener("input", render);
 
 });
   
-function openHelp() {
-  document.getElementById("helpModal").style.display = "flex";
-}
-
-/* =====================
-   起動
-===================== */
-renderPets();
-loadPetState();
-render();
-search.addEventListener("input", render);
-
 </script>
 
 </body>
