@@ -741,7 +741,7 @@ btn.onclick = () => {
   });
 }
 
-function savePets() {
+  function savePets() {
   localStorage.setItem("pets", JSON.stringify(pets));
 }
 
@@ -782,6 +782,8 @@ const progress = document.getElementById("progress");
    優先度
 ===================== */
 function getPriority(s) {
+  const allStarUsed = s.stars && Object.values(s.stars).every(v => v);
+  
   if (s.like) return 1;
   if (s.dislike) return 2;
   if (allStarUsed) return 5; // ←一番下へ
