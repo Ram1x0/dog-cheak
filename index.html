@@ -1100,13 +1100,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
   if (localStorage.getItem("hideHelp") === "true") {
     modal.style.display = "none";
+  } else {
+    modal.style.display = "flex"; // ←これ追加
   }
-
-  const btns = document.querySelectorAll(".closeBtn");
-
-  btns.forEach(btn => {
-    btn.addEventListener("click", closeHelp);
-  });
 
 });
   
