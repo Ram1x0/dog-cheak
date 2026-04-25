@@ -131,6 +131,18 @@ button:active {
   touch-action: manipulation;
 }
 
+.starBtns {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+}
+
+.starBtns button {
+  flex: 1;
+  font-size: 10px;
+  padding: 6px 0;
+}
+  
 .closeBtn {
   pointer-events: auto;
   z-index: 10000;
@@ -752,7 +764,12 @@ function loadPetState() {
     if (saved) {
       state[i] = JSON.parse(saved);
     } else {
-      state[i] = { like: false, dislike: false, given: false };
+      state[i] = { 
+        like: false, 
+        dislike: false, 
+        given: false,
+        stars: {}
+      };
     }
   }
 }
@@ -767,6 +784,7 @@ const progress = document.getElementById("progress");
 function getPriority(s) {
   if (s.like) return 1;
   if (s.dislike) return 2;
+  if (allStarUsed) return 5; // ←一番下へ
   if (!s.given && !s.like && !s.dislike) return 3;
   return 4;
 }
@@ -839,6 +857,20 @@ function setState(i, type, div) {
   render();
 }
 
+function setStar(i, star) {
+  if (!state[i].stars) state[i].stars = {};
+
+  state[i].stars[star] = !state[i].stars[star];
+
+  const pet = pets.find(p => p.id === currentPet);
+  localStorage.setItem(
+    `pet_${currentPet}_${pet.type}_${i}`,
+    JSON.stringify(state[i])
+  );
+
+  render();
+}
+
 let profileVisible = false;
 
 function toggleProfile() {
@@ -892,7 +924,7 @@ function render() {
   const keyword = search.value.toLowerCase();
 
   const order = [...currentFoods.keys()].sort(sortIndex);
-
+  
   order.forEach(i => {
 
     const food = currentFoods[i];
@@ -907,6 +939,12 @@ function render() {
     else if (s.dislike) div.classList.add("dislike");
     else if (s.given) div.classList.add("given");
 
+    const starUsed = s.stars && Object.values(s.stars).some(v => v);
+
+if (starUsed && !s.like && !s.dislike) {
+  div.classList.add("given");
+}
+
     div.innerHTML = `
       <div class="img-box">
         <img src="${food.img}" loading="lazy">
@@ -914,9 +952,17 @@ function render() {
       </div>
 
       <div class="btns">
-        <button class="likeBtn">${text[lang].like}</button>
-        <button class="dislikeBtn">${text[lang].dislike}</button>
-      </div>
+  <button class="likeBtn">${text[lang].like}</button>
+  <button class="dislikeBtn">${text[lang].dislike}</button>
+</div>
+
+<div class="starBtns">
+  <button onclick="setStar(${i},1)">★1</button>
+  <button onclick="setStar(${i},2)">★2</button>
+  <button onclick="setStar(${i},3)">★3</button>
+  <button onclick="setStar(${i},4)">★4</button>
+  <button onclick="setStar(${i},5)">★5</button>
+</div>
 
       <div class="hint">${text[lang].hint}</div>
     `;
