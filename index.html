@@ -1032,24 +1032,6 @@ for (let i = 0; i < currentFoods.length; i++) {
   if (y > 180) break;
 }
 
-  for (let i = 0; i < currentFoods.length; i++) {
-
-    const s = state[i];
-    if (!s) continue;
-
-    if (s.like) {
-      ctx.fillText("好き: " + currentFoods[i].name, 20, y);
-      y += 20;
-    }
-
-    if (s.dislike) {
-      ctx.fillText("嫌い: " + currentFoods[i].name, 20, y);
-      y += 20;
-    }
-
-    if (y > 280) break;
-  }
-
   const img = document.getElementById("profileImg");
   img.src = canvas.toDataURL("image/png");
   img.style.display = "block";
@@ -1078,6 +1060,11 @@ document.getElementById("hiddenUpload").addEventListener("change", function(e) {
   reader.readAsDataURL(file);
 });
 
+function openHelp() {
+  const modal = document.getElementById("helpModal");
+  modal.style.display = "flex";
+}
+
 function closeHelp() {
   const modal = document.getElementById("helpModal");
   const hide = document.getElementById("hideHelp").checked;
@@ -1100,11 +1087,12 @@ window.addEventListener("DOMContentLoaded", () => {
   // 📖ポップアップ
   const modal = document.getElementById("helpModal");
 
-  if (localStorage.getItem("hideHelp") === "true") {
-    modal.style.display = "none";
-  } else {
-    modal.style.display = "flex";
-  }
+  const hide = localStorage.getItem("hideHelp");
+
+  if (hide !== "true") {
+    setTimeout(() => {
+      modal.style.display = "flex";
+    }, 100); // ←ちょい遅延で確実表示
 
   // 🐶初期描画
   renderPets();
