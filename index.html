@@ -1077,6 +1077,9 @@ function closeHelp() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("hideHelp") === null) {
+  localStorage.setItem("hideHelp", "false");
+}
 
   // 🔊ボタン
   const btn = document.getElementById("soundBtn");
@@ -1092,13 +1095,13 @@ window.addEventListener("DOMContentLoaded", () => {
   // 📖ポップアップ
   const modal = document.getElementById("helpModal");
 
-  const hide = localStorage.getItem("hideHelp");
+  const hide = localStorage.getItem("hideHelp") || "false";
 
-  if (hide !== "true") {
-    setTimeout(() => {
-      modal.style.display = "flex";
-    }, 300); // ←ちょい遅延で確実表示
-  }
+  if (hide === "false") {
+  setTimeout(() => {
+    modal.style.display = "flex";
+  }, 300);
+}
 
   // 🔍検索イベント
   search.addEventListener("input", render);
