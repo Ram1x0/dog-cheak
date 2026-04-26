@@ -1017,10 +1017,23 @@ function loadPetState() {
 
     const saved = localStorage.getItem(`pet_${currentPet}_${pet.type}_${i}`);
 
-    if (saved) {
-      state[i] = JSON.parse(saved);
-    } else {
+    try {
+      if (saved) {
+        const parsed = JSON.parse(saved);
+
+        state[i] = {
+          like: !!parsed.like,
+          dislike: !!parsed.dislike,
+          given: !!parsed.given
+        };
+
+      } else {
+        state[i] = { like: false, dislike: false, given: false };
+      }
+
+    } catch (e) {
       state[i] = { like: false, dislike: false, given: false };
+      localStorage.removeItem(`pet_${currentPet}_${pet.type}_${i}`);
     }
   }
 }
