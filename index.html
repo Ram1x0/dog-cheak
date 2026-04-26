@@ -429,16 +429,16 @@ button:active {
 
 <div class="topbar">
   <input id="search" placeholder=text[lang].search>
-  <button onclick="resetData()">リセット</button>
+  <button onclick="resetData()" id="reset"></button>
 </div>
 
 <div style="text-align:center; margin:8px 0;">
   <select id="petType">
-    <option value="dog">🐶 犬</option>
-    <option value="cat">🐱 猫</option>
+    <option value="dog" id="dog"></option>
+    <option value="cat" id="cat"></option>
   </select>
-  <button onclick="addPet()">＋ペット追加</button>
-  <button onclick="toggleProfile()">📸 プロフィール生成</button>
+  <button onclick="addPet()" id="newPet"></button>
+  <button onclick="toggleProfile()" id="profile"></button>
 </div>
 
 <div id="petList"></div>
@@ -616,6 +616,8 @@ let soundOn = JSON.parse(localStorage.getItem("soundOn") || "true");
   
 const text = {
   jp: {
+    dog: "🐶 犬",
+    cat: "🐱 猫",
     title: "🐶 ペットのエサ管理 🐱",
     search: "検索",
     like: "好き",
@@ -623,7 +625,7 @@ const text = {
 
     reset: "リセット",
     addPet: "＋ペット追加",
-    profile: "プロフィール生成",
+    profile: "📸 プロフィール生成",
 
     newPet: "新しいペット",
     deleteConfirm: "このペットを削除しますか？",
@@ -632,6 +634,8 @@ const text = {
   },
 
   en: {
+    dog: "🐶 dog",
+    cat: "🐱 cat",
     title: "🐶 Pet Food Management 🐱",
     search: "Search",
     like: "Like",
@@ -639,7 +643,7 @@ const text = {
 
     reset: "Reset",
     addPet: "+ Add Pet",
-    profile: "Generate Profile",
+    profile: "📸 Generate Profile",
 
     newPet: "New Pet",
     deleteConfirm: "Delete this pet?",
@@ -648,6 +652,8 @@ const text = {
   },
 
   zh_cn: {
+    dog: "🐶 狗",
+    cat: "🐱 猫",
     title: "🐶 宠物食物管理 🐱",
     search: "搜索",
     like: "喜欢",
@@ -655,7 +661,7 @@ const text = {
 
     reset: "重置",
     addPet: "+ 添加宠物",
-    profile: "生成资料",
+    profile: "📸生成资料",
 
     newPet: "新宠物",
     deleteConfirm: "确定删除这个宠物吗？",
@@ -664,6 +670,8 @@ const text = {
   },
 
   zh_tw: {
+    dog: "🐶 狗",
+    cat: "🐱 貓",
     title: "🐶 寵物食物管理 🐱",
     search: "搜尋",
     like: "喜歡",
@@ -671,7 +679,7 @@ const text = {
 
     reset: "重置",
     addPet: "+ 新增寵物",
-    profile: "生成資料",
+    profile: "📸生成資料",
 
     newPet: "新寵物",
     deleteConfirm: "要刪除這隻寵物嗎？",
@@ -680,6 +688,8 @@ const text = {
   },
 
   ko: {
+    dog: "🐶 개",
+    cat: "🐱 고양이",
     title: "🐶 반려동물 음식 관리 🐱",
     search: "검색",
     like: "좋아함",
@@ -687,7 +697,7 @@ const text = {
 
     reset: "초기화",
     addPet: "+ 펫 추가",
-    profile: "프로필 생성",
+    profile: "📸 프로필 생성",
 
     newPet: "새 펫",
     deleteConfirm: "이 펫을 삭제할까요?",
@@ -696,6 +706,8 @@ const text = {
   },
 
   th: {
+    dog: "🐶 สุนัข",
+    cat: "🐱 แมว",
     title: "🐶 การจัดการอาหารสัตว์เลี้ยง 🐱",
     search: "ค้นหา",
     like: "ชอบ",
@@ -703,7 +715,7 @@ const text = {
 
     reset: "รีเซ็ต",
     addPet: "+ เพิ่มสัตว์เลี้ยง",
-    profile: "สร้างโปรไฟล์",
+    profile: "📸 สร้างโปรไฟล์",
 
     newPet: "สัตว์เลี้ยงใหม่",
     deleteConfirm: "ลบสัตว์เลี้ยงนี้ไหม?",
@@ -712,6 +724,8 @@ const text = {
   },
 
   tl: {
+    dog: "🐶 aso",
+    cat: "🐱 pusa",
     title: "🐶 Pamamahala ng pagkain 🐱",
     search: "Maghanap",
     like: "Gusto",
@@ -719,7 +733,7 @@ const text = {
 
     reset: "I-reset",
     addPet: "+ Magdagdag ng alaga",
-    profile: "Gumawa ng profile",
+    profile: "📸 Gumawa ng profile",
 
     newPet: "Bagong alaga",
     deleteConfirm: "Tanggalin ang alagang ito?",
