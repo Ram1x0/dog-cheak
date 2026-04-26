@@ -242,16 +242,24 @@ button:active {
 .label {
   position: absolute;
   bottom: 0;
+  left: 0;
   width: 100%;
-  padding: 5px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 5px 4px;
   font-size: 10px;
   color: white;
+
   background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+
   text-align: center;
-  left: 0;
-  white-space: normal;       /* 改行OK */
-  word-break: break-word;    /* 長い単語も折る */
+  white-space: normal;
+  word-break: break-word;
   line-height: 1.2;
+  transform: translateY(-1px);
 }
 
   /* 背景ぼかし */
