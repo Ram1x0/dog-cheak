@@ -1142,9 +1142,20 @@ function closeLang() {
   
 window.addEventListener("DOMContentLoaded", () => {
 
-  // 🌐 言語読み込み（←これ追加）
-  const savedLang = localStorage.getItem("lang");
-  if (savedLang) lang = savedLang;
+  // 🌐 言語判定
+const savedLang = localStorage.getItem("lang");
+
+if (savedLang) {
+  lang = savedLang;
+} else {
+  const browserLang = navigator.language.toLowerCase();
+
+  if (browserLang.includes("ja")) {
+    lang = "jp";
+  } else {
+    lang = "en"; // 外国ユーザーは英語
+  }
+}
 
   // 🐶初期描画
   renderPets();
