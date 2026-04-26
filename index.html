@@ -398,20 +398,11 @@ button:active {
   <div class="modalContent">
     <button class="closeBtn" onclick="closeHelp()">‪❌</button>
 
-    <h2>📖 操作説明</h2>
-
-    <p>[ペットタブ]</p>
-    <p>・タップ → ペット切替</p>
-    <p>・ダブルタップ → 名前変更</p>
-    <p>・長押し → 削除</p>
-    <p>[エサ画像]</p>
-    <p>・画像タップ → あげたことがある</p>
-    <p>・🟢ボタン → 好物</p>
-    <p>・🔴ボタン → 嫌いな物</p>
+    <h2></h2>
 
     <label class="hideCheck">
       <input type="checkbox" id="hideHelp">
-      次回以降表示しない
+      <span id="hideHelpText"></span>
     </label>
 
   </div>
@@ -746,7 +737,57 @@ const text = {
     deleteConfirm: "Tanggalin ang alagang ito?",
     maxPet: "Hanggang 13 alaga",
     renamePrompt: "Palitan ang pangalan",
-  }
+  },
+
+  helpTitle: {
+  jp: "📖 操作説明",
+  en: "📖 How to use",
+  zh_cn: "📖 操作说明",
+  zh_tw: "📖 操作說明",
+  ko: "📖 사용 방법",
+  th: "📖 วิธีใช้งาน",
+  tl: "📖 Gabay sa paggamit"
+},
+
+language: {
+  jp: "🌐 言語",
+  en: "🌐 Language",
+  zh_cn: "🌐 语言",
+  zh_tw: "🌐 語言",
+  ko: "🌐 언어",
+  th: "🌐 ภาษา",
+  tl: "🌐 Wika"
+},
+
+helpBtn: {
+  jp: "❓ 説明",
+  en: "❓ Help",
+  zh_cn: "❓ 说明",
+  zh_tw: "❓ 說明",
+  ko: "❓ 설명",
+  th: "❓ วิธีใช้",
+  tl: "❓ Tulong"
+},
+
+petTab: {
+  jp: "ペット",
+  en: "Pets",
+  zh_cn: "宠物",
+  zh_tw: "寵物",
+  ko: "펫",
+  th: "สัตว์เลี้ยง",
+  tl: "Alaga"
+},
+
+  hideHelp: {
+  jp: "次回以降表示しない",
+  en: "Don't show again",
+  zh_cn: "不再显示",
+  zh_tw: "不再顯示",
+  ko: "다시 표시하지 않기",
+  th: "ไม่แสดงอีก",
+  tl: "Huwag nang ipakita"
+}
 };
 
 let pets = JSON.parse(localStorage.getItem("pets")) || [
@@ -757,9 +798,14 @@ let currentPet = pets[0].id;
   
 function setLang(l) {
   lang = l;
-  localStorage.setItem("lang", l); // ←追加
-  closeLang(); // ←追加
+  localStorage.setItem("lang", l);
+  closeLang();
+  
+  renderPets();
+  loadPetState();
   render();
+  updateStaticUI(); // ←これだけで全部変わる
+
 }
 
 function addPet() {
@@ -1128,19 +1174,117 @@ let generating = false;
 
 function updateStaticUI() {
 
-  // ボタン類
+  // ボタン
   document.getElementById("reset").textContent = text[lang].reset;
   document.getElementById("newPet").textContent = text[lang].newPet;
   document.getElementById("profile").textContent = text[lang].profile;
 
-  // ペット選択
+  // ペットタブ
   document.getElementById("dog").textContent = text[lang].dog;
   document.getElementById("cat").textContent = text[lang].cat;
 
-  // タイトルもここで統一してOK（保険）
+  // 上部ボタン
+  document.querySelector("button[onclick='openLang()']").textContent =
+    text[lang].language;
+
+  document.querySelector("button[onclick='openHelp()']").textContent =
+    text[lang].helpBtn;
+
+  // タイトル
   document.querySelector("h1").textContent = text[lang].title;
-}
-  
+
+  // helpタイトル
+  const helpTitle = document.querySelector("#helpModal h2");
+  if (helpTitle) helpTitle.textContent = text[lang].helpTitle;
+
+  // 「次回以降表示しない」
+  const hideHelpText = document.getElementById("hideHelpText");
+  if (hideHelpText) {
+    hideHelpText.textContent = text[lang].hideHelp;
+  }
+
+  // help本文
+  const helpText = document.getElementById("helpText");
+
+  const helpLines = {
+    jp: [
+      "[ペットタブ]",
+      "・タップ → ペット切替",
+      "・ダブルタップ → 名前変更",
+      "・長押し → 削除",
+      "[エサ画像]",
+      "・画像タップ → あげたことがある",
+      "・🟢ボタン → 好物",
+      "・🔴ボタン → 嫌いな物"
+    ],
+    en: [
+      "[Pets tab]",
+      "Tap → Switch pet",
+      "Double tap → Rename",
+      "Long press → Delete",
+      "[Food]",
+      "Tap image → Given",
+      "Green → Like",
+      "Red → Dislike"
+    ],
+    zh_cn: [
+      "[宠物]",
+      "点击 → 切换",
+      "双击 → 改名",
+      "长按 → 删除",
+      "[食物]",
+      "点击图片 → 已喂过",
+      "绿 → 喜欢",
+      "红 → 不喜欢"
+    ],
+    zh_tw: [
+      "[寵物]",
+      "點擊 → 切換",
+      "雙擊 → 改名",
+      "長按 → 刪除",
+      "[食物]",
+      "點擊 → 已餵",
+      "綠 → 喜歡",
+      "紅 → 不喜歡"
+    ],
+    ko: [
+      "[펫]",
+      "탭 → 변경",
+      "더블탭 → 이름변경",
+      "길게 → 삭제",
+      "[음식]",
+      "터치 → 먹임",
+      "초록 → 좋아",
+      "빨강 → 싫어"
+    ],
+    th: [
+      "[สัตว์เลี้ยง]",
+      "แตะ → เปลี่ยน",
+      "ดับเบิล → เปลี่ยนชื่อ",
+      "กดค้าง → ลบ",
+      "[อาหาร]",
+      "แตะรูป → ให้แล้ว",
+      "เขียว → ชอบ",
+      "แดง → ไม่ชอบ"
+    ],
+    tl: [
+      "[Alaga]",
+      "Tap → palit",
+      "Double tap → palitan name",
+      "Long press → delete",
+      "[Pagkain]",
+      "Tap → nabigyan",
+      "Green → gusto",
+      "Red → ayaw"
+    ]
+  };
+
+  if (helpText) {
+    helpText.innerHTML = helpLines[lang]
+      .map(t => `<p>${t}</p>`)
+      .join("");
+  }
+}  
 /* =====================
    プロフィール生成
 ===================== */
