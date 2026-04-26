@@ -628,6 +628,7 @@ const text = {
     hideHelp: "次回以降表示しない",
       
     newPet: "新しいペット",
+    petDefaultName: "ペット1",
     deleteConfirm: "このペットを削除しますか？",
     maxPet: "最大13匹まで",
     renamePrompt: "名前変更",
@@ -653,6 +654,7 @@ const text = {
     hideHelp: "Don't show again",
 
     newPet: "New Pet",
+    petDefaultName: "Pet 1",
     deleteConfirm: "Delete this pet?",
     maxPet: "Maximum 13 pets",
     renamePrompt: "Rename",
@@ -678,6 +680,7 @@ const text = {
     hideHelp: "不再显示",
 
     newPet: "新宠物",
+    petDefaultName: "宠物1",
     deleteConfirm: "确定删除这个宠物吗？",
     maxPet: "最多13只",
     renamePrompt: "修改名称",
@@ -703,6 +706,7 @@ const text = {
     hideHelp: "不再顯示",
 
     newPet: "新寵物",
+    petDefaultName: "寵物1",
     deleteConfirm: "要刪除這隻寵物嗎？",
     maxPet: "最多13隻",
     renamePrompt: "修改名稱",
@@ -728,6 +732,7 @@ const text = {
     hideHelp: "다시 표시하지 않기",
 
     newPet: "새 펫",
+    petDefaultName: "펫1",
     deleteConfirm: "이 펫을 삭제할까요?",
     maxPet: "최대 13마리",
     renamePrompt: "이름 변경",
@@ -753,6 +758,7 @@ const text = {
     hideHelp: "ไม่แสดงอีก",
 
     newPet: "สัตว์เลี้ยงใหม่",
+    petDefaultName: "สัตว์เลี้ยง1",
     deleteConfirm: "ลบสัตว์เลี้ยงนี้ไหม?",
     maxPet: "สูงสุด 13 ตัว",
     renamePrompt: "เปลี่ยนชื่อ",
@@ -779,6 +785,7 @@ const text = {
     
 
     newPet: "Bagong alaga",
+    petDefaultName: "Alaga1",
     deleteConfirm: "Tanggalin ang alagang ito?",
     maxPet: "Hanggang 13 alaga",
     renamePrompt: "Palitan ang pangalan",
@@ -786,7 +793,7 @@ const text = {
 };
 
 let pets = JSON.parse(localStorage.getItem("pets")) || [
-  { id: Date.now(), name: "ペット1", type: "dog" }
+  { id: Date.now(), name: getDefaultPetName(), type: "dog" }
 ];
 
 let currentPet = pets[0].id;
@@ -1277,7 +1284,12 @@ function updateStaticUI() {
       .map(t => `<p>${t}</p>`)
       .join("");
   }
-}  
+} 
+
+function getDefaultPetName() {
+  return text.petDefaultName[lang] || "Pet 1";
+}
+  
 /* =====================
    プロフィール生成
 ===================== */
