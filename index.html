@@ -620,42 +620,111 @@ const text = {
     search: "検索",
     like: "好き",
     dislike: "嫌い",
+
+    reset: "リセット",
+    addPet: "＋ペット追加",
+    profile: "プロフィール生成",
+
+    newPet: "新しいペット",
+    deleteConfirm: "このペットを削除しますか？",
+    maxPet: "最大13匹まで",
+    renamePrompt: "名前変更",
   },
+
   en: {
     title: "🐶 Pet Food Management 🐱",
     search: "Search",
     like: "Like",
     dislike: "Dislike",
+
+    reset: "Reset",
+    addPet: "+ Add Pet",
+    profile: "Generate Profile",
+
+    newPet: "New Pet",
+    deleteConfirm: "Delete this pet?",
+    maxPet: "Maximum 13 pets",
+    renamePrompt: "Rename",
   },
+
   zh_cn: {
     title: "🐶 宠物食物管理 🐱",
     search: "搜索",
     like: "喜欢",
     dislike: "讨厌",
+
+    reset: "重置",
+    addPet: "+ 添加宠物",
+    profile: "生成资料",
+
+    newPet: "新宠物",
+    deleteConfirm: "确定删除这个宠物吗？",
+    maxPet: "最多13只",
+    renamePrompt: "修改名称",
   },
+
   zh_tw: {
     title: "🐶 寵物食物管理 🐱",
     search: "搜尋",
     like: "喜歡",
     dislike: "討厭",
+
+    reset: "重置",
+    addPet: "+ 新增寵物",
+    profile: "生成資料",
+
+    newPet: "新寵物",
+    deleteConfirm: "要刪除這隻寵物嗎？",
+    maxPet: "最多13隻",
+    renamePrompt: "修改名稱",
   },
+
   ko: {
     title: "🐶 반려동물 음식 관리 🐱",
     search: "검색",
     like: "좋아함",
     dislike: "싫어함",
+
+    reset: "초기화",
+    addPet: "+ 펫 추가",
+    profile: "프로필 생성",
+
+    newPet: "새 펫",
+    deleteConfirm: "이 펫을 삭제할까요?",
+    maxPet: "최대 13마리",
+    renamePrompt: "이름 변경",
   },
+
   th: {
     title: "🐶 การจัดการอาหารสัตว์เลี้ยง 🐱",
     search: "ค้นหา",
     like: "ชอบ",
     dislike: "ไม่ชอบ",
+
+    reset: "รีเซ็ต",
+    addPet: "+ เพิ่มสัตว์เลี้ยง",
+    profile: "สร้างโปรไฟล์",
+
+    newPet: "สัตว์เลี้ยงใหม่",
+    deleteConfirm: "ลบสัตว์เลี้ยงนี้ไหม?",
+    maxPet: "สูงสุด 13 ตัว",
+    renamePrompt: "เปลี่ยนชื่อ",
   },
+
   tl: {
-    title: "🐶 Pamamahala ng pagkain ng alaga 🐱",
+    title: "🐶 Pamamahala ng pagkain 🐱",
     search: "Maghanap",
     like: "Gusto",
     dislike: "Ayaw",
+
+    reset: "I-reset",
+    addPet: "+ Magdagdag ng alaga",
+    profile: "Gumawa ng profile",
+
+    newPet: "Bagong alaga",
+    deleteConfirm: "Tanggalin ang alagang ito?",
+    maxPet: "Hanggang 13 alaga",
+    renamePrompt: "Palitan ang pangalan",
   }
 };
 
@@ -674,7 +743,7 @@ function setLang(l) {
 
 function addPet() {
   if (pets.length >= 13) {
-    alert("最大13匹まで");
+    alert(text[lang].maxPet);
     return;
   }
 
@@ -682,7 +751,7 @@ function addPet() {
 
   pets.push({
     id: Date.now(),
-    name: "新しいペット",
+    name: text[lang].newPet,
     type: type
   });
 
@@ -692,7 +761,7 @@ function addPet() {
 
 function deletePet(id) {
 
-  if (!confirm("このペットを削除しますか？")) return;
+  if (!confirm(text[lang].deleteConfirm)) return;
 
   // 👇削除前に取得（←これが超重要）
   const pet = pets.find(p => p.id === id);
@@ -770,7 +839,7 @@ btn.onclick = () => {
     tapTimer = null;
 
     // 👇名前変更
-    const newName = prompt("名前変更", p.name);
+    const newName = prompt(text[lang].renamePrompt, p.name);
     if (newName && newName.trim() !== "") {
       pets[i].name = newName;
       savePets();
