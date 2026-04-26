@@ -400,6 +400,8 @@ button:active {
 
     <h2></h2>
 
+    <div id="helpText"></div>
+
     <label class="hideCheck">
       <input type="checkbox" id="hideHelp">
       <span id="hideHelpText"></span>
@@ -411,9 +413,9 @@ button:active {
 <h1>🐶わんにゃん好物探し🐱</h1>
 
 <div style="text-align:center; margin-bottom:8px;">
-  <button onclick="openLang()">🌐 Language</button>
+  <button onclick="openLang()" id="langBtn"></button>
   <button id="soundBtn" onclick="toggleSound()">🔊 ON</button>
-  <button onclick="openHelp()">❓ 説明</button>
+  <button onclick="openHelp()" id="helpBtn"></button>
 </div>
 
 <input type="file" id="hiddenUpload" accept="image/*" style="display:none;">
@@ -1184,11 +1186,11 @@ function updateStaticUI() {
   document.getElementById("cat").textContent = text[lang].cat;
 
   // 上部ボタン
-  document.querySelector("button[onclick='openLang()']").textContent =
-    text[lang].language;
+  document.getElementById("langBtn").textContent =
+  text[lang].language;
 
-  document.querySelector("button[onclick='openHelp()']").textContent =
-    text[lang].helpBtn;
+  document.getElementById("helpBtn").textContent =
+  text[lang].helpBtn;
 
   // タイトル
   document.querySelector("h1").textContent = text[lang].title;
