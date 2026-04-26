@@ -1291,7 +1291,7 @@ function updateStaticUI() {
 } 
 
 function getDefaultPetName() {
-  return text[lang].petDefaul || "Pet 1";
+  return text[lang].petDefaultName || "Pet 1";
 }
   
 /* =====================
@@ -1344,13 +1344,15 @@ for (let i = 0; i < currentFoods.length; i++) {
   const s = state[i];
   if (!s) continue;
 
+  const foodName = currentFoods[i].name[lang] || currentFoods[i].name.jp;
+
   if (s.like) {
-    ctx.fillText("好き: " + currentFoods[i].name[lang] || currentFoods[i].name.jp, y);
+    ctx.fillText("好き: " + foodName, 150, y);
     y += 18;
   }
 
   if (s.dislike) {
-    ctx.fillText("嫌い: " + currentFoods[i].name[lang] || currentFoods[i].name.jp, 150, y);
+    ctx.fillText("嫌い: " + foodName, 150, y);
     y += 18;
   }
 
