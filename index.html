@@ -252,7 +252,7 @@ button:active {
   justify-content: center;
   align-items: center;
 
-  padding: 7px 4px;
+  padding: 9px 4px;
   font-size: 10px;
   color: white;
 
@@ -507,6 +507,9 @@ X（旧Twitter）：
   @_Ram1x
 </a>
 </p>
+
+<p id="disclaimer" style="font-size:10px; opacity:0.5; text-align:center; margin-top:20px;">
+</p>
   
 </div>
 
@@ -678,6 +681,8 @@ const text = {
     deleteConfirm: "このペットを削除しますか？",
     maxPet: "最大13匹まで",
     renamePrompt: "名前変更",
+
+    disclaimer: "※本ツールは個人が制作した非公式のものです。ゲーム公式とは一切関係ありません。",
   },
 
   en: {
@@ -704,6 +709,8 @@ const text = {
     deleteConfirm: "Delete this pet?",
     maxPet: "Maximum 13 pets",
     renamePrompt: "Rename",
+
+    disclaimer: "This tool is an unofficial fan-made project and is not affiliated with the official game.",
   },
 
   zh_cn: {
@@ -730,6 +737,8 @@ const text = {
     deleteConfirm: "确定删除这个宠物吗？",
     maxPet: "最多13只",
     renamePrompt: "修改名称",
+
+    disclaimer: "本工具为个人制作的非官方项目，与游戏官方无任何关联。",
   },
 
   zh_tw: {
@@ -756,6 +765,8 @@ const text = {
     deleteConfirm: "要刪除這隻寵物嗎？",
     maxPet: "最多13隻",
     renamePrompt: "修改名稱",
+
+    disclaimer: "本工具為個人製作的非官方專案，與遊戲官方無任何關聯。",
   },
 
   ko: {
@@ -782,6 +793,8 @@ const text = {
     deleteConfirm: "이 펫을 삭제할까요?",
     maxPet: "최대 13마리",
     renamePrompt: "이름 변경",
+
+    disclaimer: "이 도구는 개인이 제작한 비공식 팬 프로젝트이며 공식 게임과는 관련이 없습니다.",
   },
 
   th: {
@@ -808,6 +821,8 @@ const text = {
     deleteConfirm: "ลบสัตว์เลี้ยงนี้ไหม?",
     maxPet: "สูงสุด 13 ตัว",
     renamePrompt: "เปลี่ยนชื่อ",
+
+    disclaimer: "เครื่องมือนี้เป็นผลงานที่ผู้พัฒนาทำขึ้นเองแบบไม่เป็นทางการ และไม่มีความเกี่ยวข้องกับเกมอย่างเป็นทางการ",
   },
 
   tl: {
@@ -835,6 +850,8 @@ const text = {
     deleteConfirm: "Tanggalin ang alagang ito?",
     maxPet: "Hanggang 13 alaga",
     renamePrompt: "Palitan ang pangalan",
+
+    disclaimer: "Ang tool na ito ay isang hindi opisyal na proyekto na ginawa ng fan at walang kaugnayan sa opisyal na laro.",
   }
 };
 
@@ -1242,6 +1259,10 @@ function updateStaticUI() {
 
   // タイトル
   document.querySelector("h1").textContent = text[lang].title;
+
+  // 注意書き
+  document.getElementById("disclaimer").textContent = text[lang].disclaimer;
+
 
   // helpタイトル
   const helpTitle = document.querySelector("#helpModal h2");
