@@ -1137,8 +1137,6 @@ function render() {
 
   updateProgress();
 
-  updateStaticUI();
-
 }
 
 /* =====================
@@ -1379,8 +1377,8 @@ document.getElementById("hiddenUpload").addEventListener("change", function(e) {
 });
 
 function openHelp() {
-  const modal = document.getElementById("helpModal");
-  modal.style.display = "flex";
+  updateStaticUI()
+  const modal = document.getElementById("helpModal").style.display = "flex";
 }
 
 function closeHelp() {
