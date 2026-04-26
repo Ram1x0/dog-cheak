@@ -626,6 +626,7 @@ const text = {
     reset: "リセット",
     addPet: "＋ペット追加",
     profile: "📸 プロフィール生成",
+    resetConfirm: "このペットのデータだけリセットしますか？",
 
     newPet: "新しいペット",
     deleteConfirm: "このペットを削除しますか？",
@@ -644,6 +645,7 @@ const text = {
     reset: "Reset",
     addPet: "+ Add Pet",
     profile: "📸 Generate Profile",
+    resetConfirm: "Reset this pet's data?",
 
     newPet: "New Pet",
     deleteConfirm: "Delete this pet?",
@@ -662,6 +664,7 @@ const text = {
     reset: "重置",
     addPet: "+ 添加宠物",
     profile: "📸生成资料",
+    resetConfirm: "要重置这个宠物的数据吗？",
 
     newPet: "新宠物",
     deleteConfirm: "确定删除这个宠物吗？",
@@ -680,6 +683,7 @@ const text = {
     reset: "重置",
     addPet: "+ 新增寵物",
     profile: "📸生成資料",
+    resetConfirm: "要重置這個寵物的資料嗎？",
 
     newPet: "新寵物",
     deleteConfirm: "要刪除這隻寵物嗎？",
@@ -698,6 +702,7 @@ const text = {
     reset: "초기화",
     addPet: "+ 펫 추가",
     profile: "📸 프로필 생성",
+    resetConfirm: "이 펫 데이터를 초기화할까요?",
 
     newPet: "새 펫",
     deleteConfirm: "이 펫을 삭제할까요?",
@@ -716,6 +721,7 @@ const text = {
     reset: "รีเซ็ต",
     addPet: "+ เพิ่มสัตว์เลี้ยง",
     profile: "📸 สร้างโปรไฟล์",
+    resetConfirm: "รีเซ็ตข้อมูลสัตว์เลี้ยงนี้ไหม?",
 
     newPet: "สัตว์เลี้ยงใหม่",
     deleteConfirm: "ลบสัตว์เลี้ยงนี้ไหม?",
@@ -734,6 +740,7 @@ const text = {
     reset: "I-reset",
     addPet: "+ Magdagdag ng alaga",
     profile: "📸 Gumawa ng profile",
+    resetConfirm: "I-reset ang data ng alaga na ito?",
 
     newPet: "Bagong alaga",
     deleteConfirm: "Tanggalin ang alagang ito?",
@@ -1081,6 +1088,9 @@ function render() {
   });
 
   updateProgress();
+
+  updateStaticUI();
+
 }
 
 /* =====================
@@ -1100,7 +1110,7 @@ function updateProgress() {
    リセット
 ===================== */
 function resetData() {
-  if (!confirm("このペットのデータだけリセットしますか？")) return;
+  if (!confirm(text[lang].resetConfirm)) return;
 
   const pet = pets.find(p => p.id === currentPet);
   const currentFoods = pet.type === "dog" ? dogFoods : catFoods;
@@ -1116,6 +1126,21 @@ function resetData() {
 
 let generating = false;
 
+function updateStaticUI() {
+
+  // ボタン類
+  document.getElementById("reset").textContent = text[lang].reset;
+  document.getElementById("newPet").textContent = text[lang].newPet;
+  document.getElementById("profile").textContent = text[lang].profile;
+
+  // ペット選択
+  document.getElementById("dog").textContent = text[lang].dog;
+  document.getElementById("cat").textContent = text[lang].cat;
+
+  // タイトルもここで統一してOK（保険）
+  document.querySelector("h1").textContent = text[lang].title;
+}
+  
 /* =====================
    プロフィール生成
 ===================== */
