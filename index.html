@@ -1377,7 +1377,6 @@ document.getElementById("hiddenUpload").addEventListener("change", function(e) {
 });
 
 function openHelp() {
-  updateStaticUI()
   const modal = document.getElementById("helpModal").style.display = "flex";
 }
 
@@ -1418,6 +1417,7 @@ if (savedLang) {
 }
 
   // 🐶初期描画
+  updateStaticUI();
   renderPets();
   loadPetState();
   render();
