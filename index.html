@@ -878,7 +878,11 @@ function renderPets() {
       btn.classList.add("active");
     }
 
-    btn.textContent = `${p.type === "dog" ? "🐶" : "🐱"} ${p.name}`;
+    btn.textContent = `${p.type === "dog" ? "🐶" : "🐱"} ${
+     p.name === "ペット1" || p.name === "Pet 1"
+    ? text[lang].petDefaultName
+    : p.name
+}`;
 
     // 長押し削除
     let pressTimer;
@@ -1287,7 +1291,7 @@ function updateStaticUI() {
 } 
 
 function getDefaultPetName() {
-  return text.petDefaultName[lang] || "Pet 1";
+  return text[lang].petDefaul || "Pet 1";
 }
   
 /* =====================
