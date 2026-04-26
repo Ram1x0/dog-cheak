@@ -615,12 +615,18 @@ const text = {
     search: "検索",
     like: "好き",
     dislike: "嫌い",
-
+  
     reset: "リセット",
     addPet: "＋ペット追加",
     profile: "📸 プロフィール生成",
     resetConfirm: "このペットのデータだけリセットしますか？",
 
+    helpTitle: "📖 操作説明",
+    language: "🌐 言語",
+    helpBtn: "❓ 説明",
+    petTab: "ペット",
+    hideHelp: "次回以降表示しない",
+      
     newPet: "新しいペット",
     deleteConfirm: "このペットを削除しますか？",
     maxPet: "最大13匹まで",
@@ -639,6 +645,12 @@ const text = {
     addPet: "+ Add Pet",
     profile: "📸 Generate Profile",
     resetConfirm: "Reset this pet's data?",
+    
+    helpTitle: "📖 How to use",
+    language: "🌐 Language",
+    helpBtn: "❓ Help",
+    petTab: "Pets",
+    hideHelp: "Don't show again",
 
     newPet: "New Pet",
     deleteConfirm: "Delete this pet?",
@@ -659,6 +671,12 @@ const text = {
     profile: "📸生成资料",
     resetConfirm: "要重置这个宠物的数据吗？",
 
+    helpTitle: "📖 操作说明",
+    language: "🌐 语言",
+    helpBtn: "❓ 说明",
+    petTab: "宠物",
+    hideHelp: "不再显示",
+
     newPet: "新宠物",
     deleteConfirm: "确定删除这个宠物吗？",
     maxPet: "最多13只",
@@ -677,6 +695,12 @@ const text = {
     addPet: "+ 新增寵物",
     profile: "📸生成資料",
     resetConfirm: "要重置這個寵物的資料嗎？",
+
+    helpTitle:"📖 操作說明",
+    language: "🌐 語言",
+    helpBtn: "❓ 說明",
+    petTab: "寵物",
+    hideHelp: "不再顯示",
 
     newPet: "新寵物",
     deleteConfirm: "要刪除這隻寵物嗎？",
@@ -697,6 +721,12 @@ const text = {
     profile: "📸 프로필 생성",
     resetConfirm: "이 펫 데이터를 초기화할까요?",
 
+    helpTitle: "📖 사용 방법",
+    language: "🌐 언어",
+    helpBtn: "❓ 설명",
+    petTab: "펫",
+    hideHelp: "다시 표시하지 않기",
+
     newPet: "새 펫",
     deleteConfirm: "이 펫을 삭제할까요?",
     maxPet: "최대 13마리",
@@ -715,6 +745,12 @@ const text = {
     addPet: "+ เพิ่มสัตว์เลี้ยง",
     profile: "📸 สร้างโปรไฟล์",
     resetConfirm: "รีเซ็ตข้อมูลสัตว์เลี้ยงนี้ไหม?",
+
+    helpTitle: "📖 วิธีใช้งาน",
+    language: "🌐 ภาษา",
+    helpBtn: "❓ วิธีใช้",
+    petTab: "สัตว์เลี้ยง",
+    hideHelp: "ไม่แสดงอีก",
 
     newPet: "สัตว์เลี้ยงใหม่",
     deleteConfirm: "ลบสัตว์เลี้ยงนี้ไหม?",
@@ -735,61 +771,18 @@ const text = {
     profile: "📸 Gumawa ng profile",
     resetConfirm: "I-reset ang data ng alaga na ito?",
 
+    helpTitle: "📖 Gabay sa paggamit",
+    language: "🌐 Wika",
+    helpBtn: "❓ Tulong",
+    petTab: "Alaga",
+    hideHelp: "Huwag nang ipakita",
+    
+
     newPet: "Bagong alaga",
     deleteConfirm: "Tanggalin ang alagang ito?",
     maxPet: "Hanggang 13 alaga",
     renamePrompt: "Palitan ang pangalan",
-  },
-
-  helpTitle: {
-  jp: "📖 操作説明",
-  en: "📖 How to use",
-  zh_cn: "📖 操作说明",
-  zh_tw: "📖 操作說明",
-  ko: "📖 사용 방법",
-  th: "📖 วิธีใช้งาน",
-  tl: "📖 Gabay sa paggamit"
-},
-
-language: {
-  jp: "🌐 言語",
-  en: "🌐 Language",
-  zh_cn: "🌐 语言",
-  zh_tw: "🌐 語言",
-  ko: "🌐 언어",
-  th: "🌐 ภาษา",
-  tl: "🌐 Wika"
-},
-
-helpBtn: {
-  jp: "❓ 説明",
-  en: "❓ Help",
-  zh_cn: "❓ 说明",
-  zh_tw: "❓ 說明",
-  ko: "❓ 설명",
-  th: "❓ วิธีใช้",
-  tl: "❓ Tulong"
-},
-
-petTab: {
-  jp: "ペット",
-  en: "Pets",
-  zh_cn: "宠物",
-  zh_tw: "寵物",
-  ko: "펫",
-  th: "สัตว์เลี้ยง",
-  tl: "Alaga"
-},
-
-  hideHelp: {
-  jp: "次回以降表示しない",
-  en: "Don't show again",
-  zh_cn: "不再显示",
-  zh_tw: "不再顯示",
-  ko: "다시 표시하지 않기",
-  th: "ไม่แสดงอีก",
-  tl: "Huwag nang ipakita"
-}
+  }
 };
 
 let pets = JSON.parse(localStorage.getItem("pets")) || [
